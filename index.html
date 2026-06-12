@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MANGOO — Sun-ripened. Hand-picked. Delivered fresh.</title>
+  <meta name="description" content="MANGOO. Premium sun-ripened mangoes, hand-picked at dawn and delivered fresh to your door." />
+  <meta property="og:title" content="MANGOO — Sun-ripened mangoes" />
+  <meta property="og:description" content="Tree-ripened for 100 days. On your table in 24 hours." />
+  <meta property="og:image" content="/photos/mango/hero.png" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="/photos/mango/hero.png" />
+
+  <script>document.documentElement.classList.add('js')</script>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+
+  <div class="loader" aria-hidden="true">
+    <span class="loader__mask"><span class="loader__word">MANGOO</span></span>
+  </div>
+
+  <!-- ============ 1. HERO — full-bleed orchard, mango rises through the letters ============ -->
+  <section class="hero" id="top">
+    <div class="hero__bg" aria-hidden="true">
+      <img src="/photos/mango/orchard.jpg" alt="" width="1536" height="2752" fetchpriority="high" />
+    </div>
+    <div class="hero__fade" aria-hidden="true"></div>
+    <header class="topbar">
+      <span class="topbar__brand">MANGOO<sup>®</sup></span>
+      <a class="btn btn--ghost" href="#order" data-magnetic>Order</a>
+    </header>
+
+    <div class="hero__stage">
+      <h1 class="hero__title" aria-label="MANGOO">
+        <span class="char char--back" aria-hidden="true"><span class="char__inner">M</span></span>
+        <span class="char char--back" aria-hidden="true"><span class="char__inner">A</span></span>
+        <span class="char char--back" aria-hidden="true"><span class="char__inner">N</span></span>
+        <span class="char char--front" aria-hidden="true"><span class="char__inner">G</span></span>
+        <span class="char char--front" aria-hidden="true"><span class="char__inner">O</span></span>
+        <span class="char char--front" aria-hidden="true"><span class="char__inner">O</span></span>
+      </h1>
+      <div class="hero__shadow" aria-hidden="true"></div>
+      <div class="hero__mango-wrap">
+        <img class="hero__mango" src="/photos/mango/hero.png" alt="A perfect sun-ripened mango with a red-gold blush"
+             width="872" height="1100" fetchpriority="high" />
+      </div>
+      <div class="hero__badge" aria-hidden="true">
+        <svg viewBox="0 0 120 120" width="120" height="120">
+          <defs>
+            <path id="badge-circle" d="M 60,60 m -46,0 a 46,46 0 1,1 92,0 a 46,46 0 1,1 -92,0" />
+          </defs>
+          <text>
+            <textPath href="#badge-circle">SUN-RIPENED&#8202;•&#8202;HAND-PICKED&#8202;•&#8202;FARM FRESH&#8202;•&#8202;</textPath>
+          </text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="hero__foot">
+      <p class="hero__tagline"><span class="hero__tagline-inner">Sun-ripened. Hand-picked. Delivered fresh.</span></p>
+      <a class="btn btn--primary" href="#order" data-magnetic>Get a crate</a>
+    </div>
+
+    <div class="hero__hint" aria-hidden="true">
+      <span class="hero__hint-label">scroll</span>
+      <span class="hero__hint-line"></span>
+    </div>
+  </section>
+
+  <!-- ============ 2. CINEMA — persistent mango, world changes around it ============ -->
+  <section class="cinema" id="order">
+    <div class="cinema__pin">
+      <span class="cinema__ghost" aria-hidden="true">MANGOO</span>
+      <div class="cinema__blob" aria-hidden="true"></div>
+      <div class="cinema__burst" aria-hidden="true"></div>
+
+      <div class="cinema__fruit">
+        <img class="cinema__whole" src="/photos/mango/hero.png" alt=""
+             width="872" height="1100" loading="lazy" decoding="async" />
+        <img class="cinema__cut" src="/photos/mango/cut.png" alt="A mango cut hedgehog-style, golden cubes of juicy flesh fanned open"
+             width="1000" height="796" loading="lazy" decoding="async" />
+      </div>
+
+      <p class="cinema__intro">One fruit. Zero shortcuts.</p>
+
+      <ul class="cinema__ring" aria-label="Why MANGOO">
+        <li class="rbadge rbadge--tl"><strong>100% organic</strong><span>no sprays, ever</span></li>
+        <li class="rbadge rbadge--tr"><strong>3× vitamin C</strong><span>of an orange</span></li>
+        <li class="rbadge rbadge--ml"><strong>Hand-picked</strong><span>at first light</span></li>
+        <li class="rbadge rbadge--mr"><strong>Never chilled</strong><span>no cold rooms</span></li>
+        <li class="rbadge rbadge--bc"><strong>24h delivery</strong><span>orchard to door</span></li>
+      </ul>
+
+      <div class="cinema__offer">
+        <ul class="offer-list">
+          <li><strong>Candy-grade sweetness</strong><span>tree-ripened to 22° Brix</span></li>
+          <li><strong>Spoon-smooth flesh</strong><span>zero fibre strings</span></li>
+          <li><strong>Cut it hedgehog-style</strong><span>eat it like dessert</span></li>
+        </ul>
+        <p class="cinema__price"><span class="cinema__amount">$24</span><span class="cinema__per">/ crate of twelve</span></p>
+        <a class="btn btn--primary btn--big" href="#taste" data-magnetic>Order now</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. MARQUEE ============ -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <span class="marquee__chunk">100% ORGANIC&ensp;•&ensp;FARM FRESH&ensp;•&ensp;FREE DELIVERY&ensp;•&ensp;</span>
+      <span class="marquee__chunk">100% ORGANIC&ensp;•&ensp;FARM FRESH&ensp;•&ensp;FREE DELIVERY&ensp;•&ensp;</span>
+      <span class="marquee__chunk">100% ORGANIC&ensp;•&ensp;FARM FRESH&ensp;•&ensp;FREE DELIVERY&ensp;•&ensp;</span>
+      <span class="marquee__chunk">100% ORGANIC&ensp;•&ensp;FARM FRESH&ensp;•&ensp;FREE DELIVERY&ensp;•&ensp;</span>
+    </div>
+  </div>
+
+  <!-- ============ 4. STORY — pinned, scroll-driven ============ -->
+  <section class="story" aria-label="From the tree to your table">
+    <div class="story__pin">
+      <div class="story__visuals" aria-hidden="true">
+        <div class="story__visual is-active">
+          <img src="/photos/mango/story-pick.jpg" alt="" width="1600" height="1073" loading="lazy" decoding="async" />
+        </div>
+        <div class="story__visual">
+          <img src="/photos/mango/story-pack.jpg" alt="" width="1600" height="1073" loading="lazy" decoding="async" />
+        </div>
+        <div class="story__visual">
+          <img src="/photos/mango/story-ship.jpg" alt="" width="1600" height="1073" loading="lazy" decoding="async" />
+        </div>
+      </div>
+      <div class="story__steps">
+        <article class="story__step">
+          <span class="story__num">01</span>
+          <h2 class="story__head">Picked</h2>
+          <p class="story__text">Twisted off the branch by hand at first light, when the sugar peaks.</p>
+        </article>
+        <article class="story__step">
+          <span class="story__num">02</span>
+          <h2 class="story__head">Packed</h2>
+          <p class="story__text">Nested in straw the same morning. Never refrigerated, never rushed.</p>
+        </article>
+        <article class="story__step">
+          <span class="story__num">03</span>
+          <h2 class="story__head">Delivered</h2>
+          <p class="story__text">At your door inside 24 hours — still warm from the orchard sun.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. VARIETIES — pinned horizontal scroll ============ -->
+  <section class="varieties" aria-label="Our mango varieties">
+    <div class="varieties__pin">
+      <div class="varieties__track">
+        <article class="vpanel vpanel--cream">
+          <span class="vpanel__num">No. 01</span>
+          <h2 class="vpanel__name">ALPHONSO</h2>
+          <img class="vpanel__photo" src="/photos/mango/varieties/alphonso.png" alt="Alphonso mango, saffron flesh with a red blush"
+               width="798" height="1100" loading="lazy" decoding="async" />
+          <p class="vpanel__note">Saffron flesh. Honey finish. The king, and it knows it.</p>
+        </article>
+        <article class="vpanel vpanel--yellow">
+          <span class="vpanel__num">No. 02</span>
+          <h2 class="vpanel__name">HIMSAGAR</h2>
+          <img class="vpanel__photo" src="/photos/mango/varieties/himsagar.png" alt="Himsagar mango with golden-yellow skin"
+               width="800" height="1100" loading="lazy" decoding="async" />
+          <p class="vpanel__note">Fiberless. Cream-sweet. Bengal's best-kept secret.</p>
+        </article>
+        <article class="vpanel vpanel--green">
+          <span class="vpanel__num">No. 03</span>
+          <h2 class="vpanel__name">LANGRA</h2>
+          <img class="vpanel__photo" src="/photos/mango/varieties/langra.png" alt="Langra mango with pale green skin"
+               width="776" height="1100" loading="lazy" decoding="async" />
+          <p class="vpanel__note">Green outside, electric inside. Sharp, then suddenly sweet.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. QUOTE ============ -->
+  <section class="quote" aria-label="Our promise">
+    <p class="quote__line">Tree-ripened for 100 days. On your table in 24 hours.</p>
+  </section>
+
+  <!-- ============ 7. FOOTER CTA ============ -->
+  <footer class="footer" id="taste">
+    <div class="footer__bg-wrap">
+      <img class="footer__bg" src="/photos/mango/orchard.jpg" alt=""
+           width="1536" height="2752" loading="lazy" decoding="async" />
+    </div>
+    <div class="footer__inner">
+      <h2 class="footer__title" aria-label="TASTE IT">
+        <span class="footer__word">
+          <span class="fchar" aria-hidden="true"><span class="fchar__inner">T</span></span>
+          <span class="fchar" aria-hidden="true"><span class="fchar__inner">A</span></span>
+          <span class="fchar" aria-hidden="true"><span class="fchar__inner">S</span></span>
+          <span class="fchar" aria-hidden="true"><span class="fchar__inner">T</span></span>
+          <span class="fchar" aria-hidden="true"><span class="fchar__inner">E</span></span>
+        </span>
+        <span class="footer__word">
+          <span class="fchar" aria-hidden="true"><span class="fchar__inner">I</span></span>
+          <span class="fchar" aria-hidden="true"><span class="fchar__inner">T</span></span>
+        </span>
+      </h2>
+      <a class="btn btn--cream btn--big" href="#order" data-magnetic>Order a crate</a>
+    </div>
+    <div class="footer__meta">
+      <span>© 2026 MANGOO</span>
+      <span>Grown with patience. Shipped overnight.</span>
+    </div>
+  </footer>
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

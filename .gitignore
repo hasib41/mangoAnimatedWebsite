@@ -1,0 +1,17 @@
+# dependencies
+node_modules/
+
+# build output (regenerate with `npm run build`)
+dist/
+
+# local tool state
+.claude/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.log
+
+# env files
+.env
+.env.*
