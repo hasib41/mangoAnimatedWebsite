@@ -15,3 +15,8 @@ Thumbs.db
 # env files
 .env
 .env.*
+.vercel
+
+# local docs, not for the repo
+GEMINI_PROMPTS.md
+WEBSITE_PROMPT.md
