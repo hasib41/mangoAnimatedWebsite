@@ -51,7 +51,11 @@ if (reduceMotion) {
 /* ============================================================ */
 function main () {
   /* Lenis smooth scroll — single rAF loop shared with GSAP */
-  const lenis = new Lenis({ duration: 1.0, wheelMultiplier: 1.2 })
+  const lenis = new Lenis({
+    duration: 1.35,
+    wheelMultiplier: 1.15,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),   /* long expo tail — cinematic settle */
+  })
   lenis.on('scroll', ScrollTrigger.update)
   gsap.ticker.add((time) => lenis.raf(time * 1000))
   gsap.ticker.lagSmoothing(0)
@@ -170,7 +174,7 @@ function intro (lenis) {
       start: 'top top',
       end: '+=100%',
       pin: true,
-      scrub: 1,
+      scrub: 1.6,
       anticipatePin: 1,
       refreshPriority: 6,
     },
@@ -228,7 +232,7 @@ function storyPinned () {
       start: 'top top',
       end: '+=200%',
       pin: '.story__pin',
-      scrub: 1,
+      scrub: 1.6,
       anticipatePin: 1,
       refreshPriority: 4,
     },
@@ -283,7 +287,7 @@ function varietiesHorizontal () {
       start: 'top top',
       end: () => '+=' + (track.scrollWidth - window.innerWidth),
       pin: '.varieties__pin',
-      scrub: 1,
+      scrub: 1.6,
       anticipatePin: 1,
       invalidateOnRefresh: true,
       refreshPriority: 3,
@@ -295,7 +299,7 @@ function varietiesHorizontal () {
     trigger: '.varieties',
     start: 'top top',
     end: () => '+=' + (track.scrollWidth - window.innerWidth),
-    scrub: 1,
+    scrub: 1.6,
     refreshPriority: 3,
   })
 
@@ -393,7 +397,7 @@ function cinema (desktop) {
       start: 'top top',
       end: '+=260%',
       pin: '.cinema__pin',
-      scrub: 1,
+      scrub: 1.6,
       anticipatePin: 1,
       refreshPriority: 5,
     },
@@ -481,7 +485,7 @@ function footer () {
     { yPercent: -7, scale: 1.15 },
     {
       yPercent: 7, scale: 1.02, ease: 'none',
-      scrollTrigger: { trigger: '.footer', start: 'top bottom', end: 'bottom top', scrub: true, refreshPriority: 1 },
+      scrollTrigger: { trigger: '.footer', start: 'top bottom', end: 'bottom top', scrub: 1.6, refreshPriority: 1 },
     })
 
   gsap.set('.fchar__inner', { yPercent: 110 })
