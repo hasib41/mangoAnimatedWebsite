@@ -35,7 +35,7 @@
    ============================================================ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: clip; }
 html.lenis { scroll-behavior: auto; }
 
 body {
@@ -44,7 +44,7 @@ body {
   background: var(--c-green);
   color: var(--c-ink);
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 img { display: block; max-width: 100%; height: auto; }
@@ -297,6 +297,7 @@ html:not(.js) .loader { display: none; }
    3. STORY — pinned scroll scene
    ============================================================ */
 .story { background: var(--c-ink); color: var(--c-cream); }
+.varieties { background: var(--c-orange); }   /* matches panel 1 so pin gaps never show green */
 
 .story__pin {
   position: relative;
@@ -319,6 +320,7 @@ html:not(.js) .loader { display: none; }
   position: absolute;
   inset: 0;
   opacity: 0;
+  overflow: hidden;          /* clean wipe edge while the photo slides */
 }
 .story__visual.is-active { opacity: 1; }
 .story__visual img {
@@ -329,6 +331,40 @@ html:not(.js) .loader { display: none; }
 
 /* default: steps stack (no-JS / mobile / reduced motion);
    html.pin-h (added by JS on capable desktops) overlays them for the pinned scene */
+/* giant ghost step number behind the copy column */
+.story__ghosts { position: absolute; inset: 0; pointer-events: none; }
+.story__ghosts span {
+  position: absolute;
+  right: 2%;
+  bottom: -4%;
+  font-family: var(--font-display);
+  font-size: clamp(10rem, 26vw, 28rem);
+  line-height: 1;
+  color: rgba(255, 248, 236, 0.05);
+  user-select: none;
+}
+
+/* step progress rail, far right center */
+.story__rail {
+  position: absolute;
+  right: var(--gutter);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  pointer-events: none;
+}
+.story__rail span {
+  width: 3px;
+  height: 2.4rem;
+  border-radius: 2px;
+  background: var(--c-yellow);
+}
+@media (max-width: 820px) {
+  .story__ghosts, .story__rail { display: none; }
+}
+
 .story__steps { position: relative; }
 .story__step { position: relative; margin-bottom: var(--sp-4); }
 html.pin-h .story__steps { min-height: 16rem; }
@@ -379,6 +415,43 @@ html.pin-h .vpanel { width: 100vw; min-height: 100svh; }
 .vpanel--yellow { background: var(--c-yellow); color: var(--c-ink); }
 .vpanel--green  { background: var(--c-green);  color: var(--c-cream); }
 
+/* giant ghost name drifting behind each panel's content */
+.vpanel__ghost {
+  position: absolute;
+  left: 50%;
+  top: 8%;
+  width: 200%;
+  margin-left: -100%;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: clamp(7rem, 22vw, 22rem);
+  line-height: 1;
+  color: rgba(25, 19, 10, 0.06);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+.vpanel--green .vpanel__ghost { color: rgba(255, 248, 236, 0.06); }
+.vpanel > *:not(.vpanel__ghost):not(.vpanel__circle) { position: relative; z-index: 1; }
+
+/* soft accent circle that scales in behind the photo */
+.vpanel__circle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(280px, 44vh, 500px);
+  aspect-ratio: 1;
+  margin: calc(clamp(280px, 44vh, 500px) / -2) 0 0 calc(clamp(280px, 44vh, 500px) / -2);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(25, 19, 10, 0.10), rgba(25, 19, 10, 0.05) 55%, rgba(25, 19, 10, 0) 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+.vpanel--green .vpanel__circle {
+  background: radial-gradient(circle, rgba(255, 201, 60, 0.16), rgba(255, 201, 60, 0.08) 55%, rgba(255, 201, 60, 0) 70%);
+}
+
 .vpanel__num {
   font-size: var(--fs-sm);
   font-weight: 600;
@@ -391,7 +464,9 @@ html.pin-h .vpanel { width: 100vw; min-height: 100svh; }
   font-weight: 400;
   font-size: var(--fs-big);
   line-height: 1;
+  overflow: hidden;            /* mask for the letter rise */
 }
+.vpanel__name .ch { display: inline-block; }
 .vpanel__photo {
   width: clamp(180px, 26vh, 320px);
   filter: drop-shadow(0 25px 30px rgba(25, 19, 10, 0.25));
@@ -530,10 +605,10 @@ html.pin-h .vpanel { width: 100vw; min-height: 100svh; }
 /* beat 3 — offer panel on the left, fruit drifts right onto the blob */
 .cinema__offer {
   position: absolute;
-  left: var(--gutter);
+  left: calc(var(--gutter) + 3vw);
   top: 50%;
   transform: translateY(-50%);
-  width: min(40%, 30rem);
+  width: min(46%, 36rem);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -544,22 +619,31 @@ html.pin-h .vpanel { width: 100vw; min-height: 100svh; }
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: var(--sp-2);
+  gap: 1.4rem;
 }
 .offer-list li {
   display: flex;
   flex-direction: column;
-  gap: 0.1em;
-  padding-left: 1em;
+  gap: 0.15em;
+  padding-left: 1.1em;
   border-left: 3px solid var(--c-orange);
 }
 .offer-list strong {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: var(--fs-xl);
+  font-size: clamp(1.7rem, 1.2rem + 2vw, 3.1rem);
+  line-height: 1.05;
+  white-space: nowrap;
   color: var(--c-cream);
 }
-.offer-list span { font-size: var(--fs-base); opacity: 0.8; }
+.offer-list span { font-size: var(--fs-base); opacity: 0.85; }
+
+/* hot-accent CTA — the one loud action on the dark scene */
+.cinema__offer .btn {
+  background: var(--c-orange);
+  color: var(--c-ink);
+}
+.cinema__offer .btn:hover { background: var(--c-yellow); }
 
 /* the price is a rotated ink sticker, like a price tag slapped on the ad */
 .cinema__price {

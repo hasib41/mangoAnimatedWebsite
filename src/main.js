@@ -12,12 +12,18 @@ const quoteEl = document.querySelector('.quote__line')
 quoteEl.innerHTML = quoteEl.textContent.trim().split(/\s+/)
   .map((w) => `<span class="word">${w}</span>`).join(' ')
 
+/* split variety names into letter spans for masked rises */
+for (const nameEl of document.querySelectorAll('.vpanel__name')) {
+  nameEl.innerHTML = nameEl.textContent.trim().split('')
+    .map((c) => `<span class="ch">${c}</span>`).join('')
+}
+
 /* ============================================================
    Reduced motion: no loader, no pins, everything simple fades
    ============================================================ */
 if (reduceMotion) {
   gsap.set('.loader', { display: 'none' })
-  gsap.set(['.cinema__whole', '.cinema__burst', '.cinema__blob', '.cinema__ghost', '.cinema__intro', '.hero__fade'], { display: 'none' })
+  gsap.set(['.cinema__whole', '.cinema__burst', '.cinema__blob', '.cinema__ghost', '.cinema__intro', '.hero__fade', '.story__ghosts', '.story__rail'], { display: 'none' })
   gsap.set('.hero__mango-wrap', { yPercent: 0 })
   /* stack the orbit + offer statically */
   gsap.set('.cinema__ring', { position: 'static', display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' })
@@ -206,10 +212,15 @@ function storyPinned () {
   const steps = gsap.utils.toArray('.story__step')
   const visuals = gsap.utils.toArray('.story__visual')
   const imgs = visuals.map((v) => v.querySelector('img'))
+  const ghosts = gsap.utils.toArray('.story__ghosts span')
+  const rail = gsap.utils.toArray('.story__rail span')
+  const partsOf = (step) => step.querySelectorAll('.story__num, .story__head, .story__text')
 
-  gsap.set(steps.slice(1), { opacity: 0, y: 60 })
-  gsap.set(visuals.slice(1), { opacity: 0, scale: 1.1 })
+  steps.slice(1).forEach((s) => gsap.set(partsOf(s), { opacity: 0, y: 50 }))
+  gsap.set(visuals.slice(1), { opacity: 0, scale: 1.08 })
   gsap.set(visuals[0], { opacity: 1 })
+  gsap.set(ghosts.slice(1), { opacity: 0, y: 60 })
+  gsap.set(rail.slice(1), { opacity: 0.25, scaleY: 0.6 })
 
   const tl = gsap.timeline({
     scrollTrigger: {
@@ -222,13 +233,24 @@ function storyPinned () {
       refreshPriority: 4,
     },
   })
-  tl.fromTo(imgs[0], { scale: 1.05 }, { scale: 1.16, duration: 1.1, ease: 'none' }, 0)
+  tl.fromTo(imgs[0], { scale: 1.06 }, { scale: 1.16, duration: 1.1, ease: 'none' }, 0)
+
   for (let i = 1; i < steps.length; i++) {
-    tl.to(steps[i - 1], { opacity: 0, y: -60, duration: 0.4, ease: 'power2.in' }, `seg${i}`)
-      .to(visuals[i - 1], { opacity: 0, scale: 0.96, duration: 0.5, ease: 'none' }, `seg${i}`)
-      .to(steps[i], { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, `seg${i}+=0.25`)
-      .to(visuals[i], { opacity: 1, scale: 1, duration: 0.5, ease: 'none' }, `seg${i}+=0.2`)
-      .fromTo(imgs[i], { scale: 1.05 }, { scale: 1.16, duration: 1.1, ease: 'none' }, `seg${i}+=0.2`)
+    const at = `seg${i}`
+    /* outgoing copy cascades up and out */
+    tl.to(partsOf(steps[i - 1]), { opacity: 0, y: -50, duration: 0.35, stagger: 0.04, ease: 'power2.in' }, at)
+      /* photos crossfade — incoming settles from a slight zoom */
+      .to(visuals[i - 1], { opacity: 0, duration: 0.5, ease: 'none' }, `${at}+=0.1`)
+      .to(visuals[i], { opacity: 1, scale: 1, duration: 0.55, ease: 'power2.out' }, `${at}+=0.15`)
+      /* ghost number + rail hand over */
+      .to(ghosts[i - 1], { opacity: 0, y: -60, duration: 0.4, ease: 'power2.in' }, at)
+      .to(ghosts[i], { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, `${at}+=0.25`)
+      .to(rail[i - 1], { opacity: 0.25, scaleY: 0.6, duration: 0.3 }, at)
+      .to(rail[i], { opacity: 1, scaleY: 1, duration: 0.3 }, `${at}+=0.2`)
+      /* incoming copy cascades in: number → heading → line */
+      .to(partsOf(steps[i]), { opacity: 1, y: 0, duration: 0.5, stagger: 0.07, ease: 'power2.out' }, `${at}+=0.35`)
+      /* fresh Ken Burns on the new photo */
+      .fromTo(imgs[i], { scale: 1.06 }, { scale: 1.16, duration: 1.1, ease: 'none' }, `${at}+=0.7`)
       .to({}, { duration: 0.6 })                  // hold each step on screen
   }
   return () => tl.scrollTrigger.kill()
@@ -269,32 +291,49 @@ function varietiesHorizontal () {
   })
 
   const extra = []
-  /* each panel's content rises as it drives into view
+  const trainScrub = () => ({
+    trigger: '.varieties',
+    start: 'top top',
+    end: () => '+=' + (track.scrollWidth - window.innerWidth),
+    scrub: 1,
+    refreshPriority: 3,
+  })
+
+  /* each panel plays a scene as it drives into view
      (panel 1 is already on screen at pin start, so it uses a vertical trigger) */
   gsap.utils.toArray('.vpanel').forEach((panel, i) => {
-    const items = panel.querySelectorAll('.vpanel__num, .vpanel__name, .vpanel__photo, .vpanel__note')
-    extra.push(gsap.fromTo(items,
-      { opacity: 0, y: 70 },
-      {
-        opacity: 1, y: 0, duration: 0.8, stagger: 0.07, ease: 'expo.out',
-        scrollTrigger: i === 0
-          ? { trigger: '.varieties', start: 'top 60%', once: true }
-          : { trigger: panel, containerAnimation: tween, start: 'left 65%', once: true },
-      }))
+    const trig = i === 0
+      ? { trigger: '.varieties', start: 'top 60%', once: true }
+      : { trigger: panel, containerAnimation: tween, start: 'left 65%', once: true }
+    const sceneTl = gsap.timeline({ scrollTrigger: trig })
+    sceneTl
+      .fromTo(panel.querySelector('.vpanel__circle'),
+        { scale: 0, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.9, ease: 'power2.out' }, 0)
+      .fromTo(panel.querySelector('.vpanel__num'),
+        { opacity: 0, x: -40 },
+        { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out' }, 0.05)
+      .fromTo(panel.querySelectorAll('.vpanel__name .ch'),
+        { yPercent: 115 },
+        { yPercent: 0, duration: 0.7, stagger: 0.04, ease: 'expo.out' }, 0.1)
+      .fromTo(panel.querySelector('.vpanel__photo'),
+        { opacity: 0, scale: 0.82, rotation: -8, y: 60 },
+        { opacity: 1, scale: 1, rotation: 0, y: 0, duration: 0.9, ease: 'back.out(1.4)' }, 0.2)
+      .fromTo(panel.querySelector('.vpanel__note'),
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.7, ease: 'expo.out' }, 0.45)
+    extra.push(sceneTl)
   })
-  /* slow counter-drift on the photos for depth inside the train */
+
+  /* depth layers across the train: ghost names race, photos drift, numbers slide */
+  for (const ghost of gsap.utils.toArray('.vpanel__ghost')) {
+    extra.push(gsap.fromTo(ghost, { xPercent: 18 }, { xPercent: -18, ease: 'none', scrollTrigger: trainScrub() }))
+  }
   for (const photo of gsap.utils.toArray('.vpanel__photo')) {
-    extra.push(gsap.fromTo(photo, { xPercent: -8 }, {
-      xPercent: 8,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '.varieties',
-        start: 'top top',
-        end: () => '+=' + (track.scrollWidth - window.innerWidth),
-        scrub: 1,
-        refreshPriority: 3,
-      },
-    }))
+    extra.push(gsap.fromTo(photo, { xPercent: -8 }, { xPercent: 8, ease: 'none', scrollTrigger: trainScrub() }))
+  }
+  for (const num of gsap.utils.toArray('.vpanel__num')) {
+    extra.push(gsap.fromTo(num, { xPercent: 60 }, { xPercent: -60, ease: 'none', scrollTrigger: trainScrub() }))
   }
   return () => {
     tween.scrollTrigger.kill()
@@ -368,9 +407,12 @@ function cinema (desktop) {
     .to('.cinema__intro', { opacity: 0, y: -30, duration: 0.25, ease: 'power2.in' }, 0.35)
   badges.forEach((b, i) => {
     tl.to(b, { opacity: 1, scale: 1, x: 0, y: 0, duration: 0.5, ease: 'back.out(1.5)' }, 0.45 + i * 0.09)
-    /* once landed, each badge keeps drifting gently with the scroll */
-    tl.to(b, { y: i % 2 ? 10 : -10, duration: 0.45, ease: 'sine.inOut' }, 1.05 + i * 0.03)
+    /* counter-rotate each badge so text stays level while the ring orbits */
+    tl.to(b, { rotation: tilt[i] - 24, duration: 0.75, ease: 'none' }, 0.95)
   })
+  /* the whole ring orbits the fruit while it holds on screen */
+  gsap.set('.cinema__ring', { transformOrigin: '50% 50%' })
+  tl.to('.cinema__ring', { rotation: 24, duration: 0.75, ease: 'none' }, 0.95)
   tl.to({}, { duration: 0.4 })
     .to(badges, { opacity: 0, y: -30, duration: 0.3, stagger: 0.04, ease: 'power2.in' }, 1.55)
 
