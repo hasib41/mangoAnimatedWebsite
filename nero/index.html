@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NÉRO — Single-origin dark chocolate</title>
+  <meta name="description" content="NÉRO. Single-origin dark chocolate — pick your dark: Origin 72%, Noir 85%, Sea Salt, Orange." />
+  <meta property="og:image" content="/photos/nero/hero.png" />
+  <link rel="icon" type="image/png" href="/favicon-nero.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@0,400;0,500;0,600;0,700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="/photos/nero/melt.png" />
+  <script>document.documentElement.classList.add('js')</script>
+  <link rel="stylesheet" href="./nero.css" />
+</head>
+<body>
+
+  <div class="loader" aria-hidden="true"><span class="loader__word">NÉRO</span><span class="loader__bar"><span class="loader__fill"></span></span></div>
+
+  <header class="top">
+    <a class="top__brand" href="#">NÉRO<sup>®</sup></a>
+    <nav class="top__nav"><a href="#">Shop</a><a href="#">Story</a><a class="top__cart" href="#" data-magnetic>Cart · 0</a></nav>
+  </header>
+
+  <main class="show" id="show">
+    <div class="show__bg" aria-hidden="true"></div>
+    <h2 class="show__ghost" aria-hidden="true">NÉRO</h2>
+
+    <div class="show__beans" aria-hidden="true">
+      <span class="bean" data-depth="0.9"><span class="bean__par"><img class="bean__img" src="/photos/nero/beans/bean1.png" alt="" width="460" height="456" /></span></span>
+      <span class="bean" data-depth="0.55"><span class="bean__par"><img class="bean__img" src="/photos/nero/beans/bean2.png" alt="" width="304" height="460" /></span></span>
+      <span class="bean" data-depth="0.7"><span class="bean__par"><img class="bean__img" src="/photos/nero/beans/bean3.png" alt="" width="288" height="460" /></span></span>
+      <span class="bean" data-depth="1"><span class="bean__par"><img class="bean__img" src="/photos/nero/beans/bean4.png" alt="" width="460" height="424" /></span></span>
+      <span class="bean" data-depth="0.6"><span class="bean__par"><img class="bean__img" src="/photos/nero/beans/bean5.png" alt="" width="460" height="419" /></span></span>
+      <span class="bean" data-depth="0.85"><span class="bean__par"><img class="bean__img" src="/photos/nero/beans/bean6.png" alt="" width="442" height="460" /></span></span>
+      <span class="bean" data-depth="0.5"><span class="bean__par"><img class="bean__img" src="/photos/nero/beans/bean1.png" alt="" width="460" height="456" /></span></span>
+      <span class="bean" data-depth="0.95"><span class="bean__par"><img class="bean__img" src="/photos/nero/beans/bean3.png" alt="" width="288" height="460" /></span></span>
+      <span class="bean" data-depth="0.65"><span class="bean__par"><img class="bean__img" src="/photos/nero/beans/bean5.png" alt="" width="460" height="419" /></span></span>
+      <span class="bean" data-depth="0.8"><span class="bean__par"><img class="bean__img" src="/photos/nero/beans/bean2.png" alt="" width="304" height="460" /></span></span>
+      <span class="bean" data-depth="0.6"><span class="bean__par"><img class="bean__img" src="/photos/nero/beans/bean4.png" alt="" width="460" height="424" /></span></span>
+      <span class="bean" data-depth="0.75"><span class="bean__par"><img class="bean__img" src="/photos/nero/beans/bean6.png" alt="" width="442" height="460" /></span></span>
+    </div>
+
+    <div class="show__layout">
+      <div class="show__stage">
+        <img class="show__shot is-active" src="/photos/nero/melt.png" alt="" width="1122" height="1400" fetchpriority="high" />
+        <img class="show__shot" src="/photos/nero/varieties/dark85.png" alt="" width="1400" height="1098" loading="lazy" />
+        <img class="show__shot" src="/photos/nero/varieties/seasalt.png" alt="" width="1400" height="1263" loading="lazy" />
+        <img class="show__shot" src="/photos/nero/varieties/orange.png" alt="" width="1400" height="992" loading="lazy" />
+      </div>
+
+      <div class="show__text">
+        <div class="show__info">
+          <span class="show__price">$11</span>
+          <h1 class="show__name">Origin<br>72%</h1>
+          <span class="show__tag">Single-origin dark chocolate</span>
+        </div>
+        <aside class="show__about">
+          <div class="show__rate"><b class="show__num">4.8</b><span class="show__stars">★★★★★</span></div>
+          <h3 class="show__about-h">About</h3>
+          <p class="show__desc">72% single estate. Bright, clean, classic — the everyday house bar.</p>
+          <a class="show__buy" href="#" data-magnetic>Add to cart — $11</a>
+        </aside>
+      </div>
+    </div>
+
+    <nav class="show__rail" aria-label="Choose your dark" role="tablist">
+      <span class="rail__ind" aria-hidden="true"></span>
+      <button class="thumb is-active" data-i="0" aria-label="Origin 72%"><span class="thumb__n">01</span><span class="thumb__img"><img src="/photos/nero/melt.png" alt="" width="1122" height="1400" loading="lazy" /></span><span class="thumb__t">Origin<br>72%</span></button>
+      <button class="thumb" data-i="1" aria-label="Noir 85%"><span class="thumb__n">02</span><span class="thumb__img"><img src="/photos/nero/varieties/dark85.png" alt="" width="1400" height="1098" loading="lazy" /></span><span class="thumb__t">Noir<br>85%</span></button>
+      <button class="thumb" data-i="2" aria-label="Sea Salt"><span class="thumb__n">03</span><span class="thumb__img"><img src="/photos/nero/varieties/seasalt.png" alt="" width="1400" height="1263" loading="lazy" /></span><span class="thumb__t">Sea<br>Salt</span></button>
+      <button class="thumb" data-i="3" aria-label="Orange"><span class="thumb__n">04</span><span class="thumb__img"><img src="/photos/nero/varieties/orange.png" alt="" width="1400" height="992" loading="lazy" /></span><span class="thumb__t">Orange</span></button>
+    </nav>
+  </main>
+
+  <button class="snd" aria-label="Toggle sound" data-magnetic><span class="snd__bars"><i></i><i></i><i></i><i></i></span><span class="snd__txt">Sound</span></button>
+  <div class="cursor" aria-hidden="true"><span class="cursor__ring"></span></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <script type="module" src="./nero.js"></script>
+</body>
+</html>

@@ -1,0 +1,345 @@
+/* ===== EXPLORE MOON ART — expanding synthwave gallery (clean build) ===== */
+
+:root{
+  --bg:       #0b0716;
+  --magenta:  #ff2e88;
+  --cyan:     #4ad9ff;
+  --violet:   #8b5cff;
+  --text:     #f3eefb;
+  --muted:    #a99cc9;
+  --accent:   #4ad9ff;            /* set per-scene by JS */
+
+  --gap:      clamp(8px, 0.9vw, 14px);
+  --radius:   clamp(16px, 1.6vw, 24px);
+  --pad:      clamp(16px, 2.2vw, 30px);
+  --ease:     cubic-bezier(.22, 1, .36, 1);
+
+  --fs-title: clamp(2.7rem, 1.2rem + 6vw, 6.6rem);
+  --fs-hero:  clamp(3rem, 1.2rem + 8.4vw, 8.2rem);
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; }
+html, body{ min-height:100%; }
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:"Inter", system-ui, sans-serif;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+a{ color:inherit; text-decoration:none; }
+
+/* starfield */
+body::before{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5;
+  background-image:
+    radial-gradient(1.4px 1.4px at 20% 30%, rgba(255,255,255,.55), transparent),
+    radial-gradient(1.2px 1.2px at 75% 22%, rgba(255,255,255,.45), transparent),
+    radial-gradient(1.6px 1.6px at 60% 70%, rgba(255,255,255,.40), transparent),
+    radial-gradient(1.1px 1.1px at 35% 80%, rgba(255,255,255,.35), transparent),
+    radial-gradient(1.3px 1.3px at 88% 60%, rgba(255,255,255,.40), transparent);
+}
+
+/* ---------- stage ---------- */
+.stage{
+  position:relative; z-index:1; height:100svh; width:100%; overflow:hidden;
+  background:
+    radial-gradient(120% 90% at 16% 10%, #1b0e38 0%, transparent 55%),
+    radial-gradient(120% 100% at 92% 92%, #260c34 0%, transparent 50%),
+    var(--bg);
+}
+.stage::after{                 /* left scrim keeps the heading legible */
+  content:""; position:absolute; inset:0; z-index:4; pointer-events:none;
+  background:linear-gradient(95deg,
+    rgba(8,5,18,.95) 0%, rgba(8,5,18,.72) 20%, rgba(8,5,18,.28) 36%, rgba(8,5,18,0) 50%);
+}
+
+/* ---------- topbar ---------- */
+.topbar{
+  position:fixed; z-index:30; inset:0 0 auto 0;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:clamp(16px,2.4vw,32px) clamp(20px,3.4vw,52px);
+}
+.topbar__brand{ font-family:"Space Grotesk", sans-serif; font-weight:700; letter-spacing:.18em; font-size:1.02rem; }
+.topbar__brand span{ color:var(--accent); transition:color .6s var(--ease); }
+.topbar__nav{ display:flex; align-items:center; gap:clamp(14px,1.8vw,30px); }
+.topbar__nav a{ font-size:.84rem; color:var(--muted); letter-spacing:.04em; transition:color .3s; }
+.topbar__nav a:hover{ color:var(--text); }
+.topbar__cta{ padding:.55em 1.1em; border:1px solid rgba(255,255,255,.22); border-radius:100px; color:var(--text)!important; font-weight:500; transition:border-color .3s, background .3s, color .3s; }
+.topbar__cta:hover{ background:var(--accent); border-color:var(--accent); color:#140a22!important; }
+
+/* ====================================================================
+   COSMIC HERO  (screen 1) — parallax depth scene + kinetic type
+   ==================================================================== */
+.cosmos{
+  position:relative; z-index:1;
+  height:100svh; width:100%; overflow:hidden;
+  display:grid; place-items:center; isolation:isolate;
+  background:
+    radial-gradient(135% 110% at 50% -22%, #2c1a5e 0%, transparent 52%),
+    radial-gradient(120% 120% at 84% 116%, #3a1140 0%, transparent 48%),
+    radial-gradient(110% 110% at 12% 96%, #102a5c 0%, transparent 52%),
+    #06040e;
+}
+.cosmos::after{                 /* fade the bottom edge into the gallery below */
+  content:""; position:absolute; inset:auto 0 0 0; height:30%; z-index:6; pointer-events:none;
+  background:linear-gradient(to bottom, transparent, var(--bg) 96%);
+}
+.cosmos__sky{ position:absolute; inset:0; z-index:1; pointer-events:none; }
+.cosmos [data-depth]{ will-change:transform; }
+.px{ position:absolute; inset:0; }
+
+/* starfields — one box-shadow field per layer (JS paints the dots); only the
+   wrapper transforms for parallax, so the field itself never repaints */
+.cosmos__stars{ position:absolute; left:0; top:0; width:1px; height:1px; border-radius:50%; background:#fff; }
+.cosmos__stars--far{  animation:drift-a 64s ease-in-out infinite alternate; }
+.cosmos__stars--near{ animation:drift-b 48s ease-in-out infinite alternate, twinkle 5.5s ease-in-out infinite; }
+@keyframes drift-a{ from{ transform:translate3d(0,0,0); } to{ transform:translate3d(26px,-16px,0); } }
+@keyframes drift-b{ from{ transform:translate3d(0,0,0); } to{ transform:translate3d(-32px,18px,0); } }
+@keyframes twinkle{ 0%,100%{ opacity:.9; } 50%{ opacity:.5; } }
+
+/* nebula haze — soft colour blobs (radial gradients, no blur filter on a big surface) */
+.cosmos__haze{
+  position:absolute; inset:-12%;
+  background:
+    radial-gradient(36% 30% at 32% 42%, rgba(255,46,136,.22), transparent 70%),
+    radial-gradient(32% 28% at 70% 58%, rgba(74,217,255,.18),  transparent 72%),
+    radial-gradient(30% 38% at 54% 32%, rgba(139,91,255,.22),  transparent 70%);
+  mix-blend-mode:screen;
+  animation:haze 26s ease-in-out infinite alternate;
+}
+@keyframes haze{ from{ transform:translate3d(-2%,1%,0) scale(1.02); } to{ transform:translate3d(3%,-2%,0) scale(1.09); } }
+
+/* luminous moon + orbiting satellite */
+.px--orb{ display:grid; place-items:center; padding-bottom:20vh; }
+.cosmos__orb{
+  position:relative;
+  width:clamp(190px, 29vw, 400px); aspect-ratio:1; border-radius:50%;
+  background:radial-gradient(circle at 36% 30%, #fffdfb 0%, #ffe2f4 13%, #d9b6ff 42%, #7d5be0 70%, #2c1a63 100%);
+  box-shadow:
+    0 0 70px 6px rgba(180,120,255,.45),
+    0 0 190px 46px rgba(120,80,255,.30),
+    inset -26px -18px 56px rgba(18,8,48,.55),
+    inset 18px 16px 44px rgba(255,255,255,.22);
+  animation:float 9s ease-in-out infinite alternate;
+}
+@keyframes float{ from{ transform:translate3d(0,-12px,0); } to{ transform:translate3d(0,14px,0); } }
+.cosmos__orbRing{
+  position:absolute; inset:-15%; border-radius:50%;
+  border:1px solid rgba(180,140,255,.22);
+  animation:halo 16s linear infinite;
+}
+.cosmos__orbRing::before{
+  content:""; position:absolute; top:-3.5px; left:50%; width:7px; height:7px; margin-left:-3.5px;
+  border-radius:50%; background:var(--cyan); box-shadow:0 0 14px 2px var(--cyan);
+}
+@keyframes halo{ to{ transform:rotate(360deg); } }
+
+/* content */
+.cosmos__content{ position:relative; z-index:5; text-align:center; padding:0 24px; max-width:min(92vw, 880px); }
+.cosmos__eyebrow{
+  font-family:"Space Grotesk", sans-serif; text-transform:uppercase; letter-spacing:.36em;
+  font-size:clamp(.7rem,.6rem + .3vw,.84rem); color:var(--cyan);
+}
+.cosmos__title{
+  margin-top:1.1rem; font-family:"Space Grotesk", sans-serif; font-weight:700;
+  text-transform:uppercase; font-size:var(--fs-hero); line-height:.9; letter-spacing:-.015em;
+  perspective:1000px;
+}
+.cosmos__title .ln{ display:block; overflow:hidden; padding-bottom:.1em; }
+.cosmos__title .ln i{
+  display:inline-block; font-style:normal; transform-origin:50% 100%;
+  will-change:transform, opacity; text-shadow:0 12px 70px rgba(0,0,0,.45);
+}
+.cosmos__title .grad i{
+  color:transparent;
+  background:linear-gradient(96deg, var(--magenta), var(--violet) 52%, var(--cyan));
+  background-size:220% 100%;
+  -webkit-background-clip:text; background-clip:text;
+  animation:shimmer 7s ease-in-out infinite alternate;
+}
+@keyframes shimmer{ from{ background-position:0% 50%; } to{ background-position:100% 50%; } }
+.cosmos__lead{
+  margin:1.5rem auto 0; max-width:44ch;
+  font-size:clamp(.98rem,.9rem + .35vw,1.16rem); line-height:1.6; color:var(--muted);
+}
+.cosmos__cta{
+  pointer-events:auto; display:inline-flex; align-items:center; gap:.55em; margin-top:2.1rem;
+  padding:.95em 1.95em; border-radius:100px;
+  background:var(--text); color:#140a22!important; font-weight:600; font-size:.95rem;
+  box-shadow:0 14px 44px -14px rgba(255,46,136,.6);
+  transition:transform .3s var(--ease), box-shadow .3s;
+}
+.cosmos__cta::after{ content:"\2193"; transition:transform .3s var(--ease); }
+.cosmos__cta:hover{ transform:translateY(-2px); box-shadow:0 20px 54px -16px rgba(255,46,136,.75); }
+.cosmos__cta:hover::after{ transform:translateY(3px); }
+
+/* scroll cue */
+.cosmos__scroll{
+  position:absolute; left:50%; bottom:clamp(16px,3vh,32px); transform:translateX(-50%);
+  z-index:7; display:flex; flex-direction:column; align-items:center; gap:.8em;
+  color:var(--muted); font-size:.66rem; letter-spacing:.26em; text-transform:uppercase;
+}
+.cosmos__scrollLine{ position:relative; width:1px; height:48px; overflow:hidden; background:rgba(255,255,255,.14); }
+.cosmos__scrollLine::after{
+  content:""; position:absolute; left:0; top:0; width:100%; height:45%;
+  background:linear-gradient(var(--cyan), transparent); animation:scroll-pulse 2s ease-in-out infinite;
+}
+@keyframes scroll-pulse{ 0%{ transform:translateY(-100%); } 60%,100%{ transform:translateY(230%); } }
+
+/* entrance — title lines handled by JS (WAAPI); the rest fade up on .ready */
+.js .cosmos__eyebrow, .js .cosmos__lead, .js .cosmos__cta{
+  opacity:0; transform:translateY(22px); transition:opacity .9s var(--ease), transform .9s var(--ease);
+}
+.js .cosmos__scroll{ opacity:0; transform:translate(-50%,18px); transition:opacity .9s var(--ease), transform .9s var(--ease); }
+.js .cosmos__title .ln i{ opacity:0; }
+.cosmos.ready .cosmos__eyebrow{ opacity:1; transform:none; transition-delay:.12s; }
+.cosmos.ready .cosmos__lead{ opacity:1; transform:none; transition-delay:.62s; }
+.cosmos.ready .cosmos__cta{ opacity:1; transform:none; transition-delay:.78s; }
+.cosmos.ready .cosmos__scroll{ opacity:1; transform:translate(-50%,0); transition-delay:1.05s; }
+
+/* ---------- hero ---------- */
+.hero{
+  position:absolute; z-index:5; pointer-events:none;
+  left:clamp(22px,4vw,72px); top:50%; transform:translateY(-50%);
+  max-width:min(46ch, 46vw);
+}
+.hero__eyebrow{
+  font-family:"Space Grotesk", sans-serif; text-transform:uppercase; letter-spacing:.34em;
+  font-size:clamp(.72rem,.62rem + .3vw,.86rem); color:var(--accent); margin-bottom:1.1rem; transition:color .6s var(--ease);
+}
+.hero__title{
+  font-family:"Space Grotesk", sans-serif; font-weight:700;
+  font-size:var(--fs-title); line-height:.98; letter-spacing:-.01em; text-transform:uppercase;
+  text-shadow:0 8px 40px rgba(0,0,0,.55);
+  perspective:900px;
+}
+.hero__title span{ display:block; overflow:hidden; padding-bottom:.06em; }
+.hero__title .tl{ display:inline-block; transform-origin:50% 100%; will-change:transform; }
+.hero__title .grad .tl{
+  color:transparent;
+  background:linear-gradient(92deg, var(--magenta), var(--violet) 60%, var(--cyan));
+  -webkit-background-clip:text; background-clip:text;
+}
+.hero__lead{ margin-top:1.4rem; max-width:34ch; font-size:clamp(.95rem,.88rem + .3vw,1.08rem); line-height:1.6; color:var(--muted); }
+
+/* live scene caption */
+.scene{ margin-top:1.5rem; padding-top:1.4rem; border-top:1px solid rgba(255,255,255,.13); max-width:34ch; }
+.scene__no{ display:inline-flex; align-items:baseline; gap:.45em; font-family:"Space Grotesk", sans-serif; letter-spacing:.12em; font-size:.8rem; color:var(--muted); }
+.scene__no b{ color:var(--accent); font-size:1.05rem; font-weight:700; transition:color .5s var(--ease); }
+.scene__no i{ font-style:normal; }
+.scene__title{ margin-top:.5rem; font-family:"Space Grotesk", sans-serif; font-weight:700; font-size:clamp(1.4rem,1rem + 1.5vw,2.15rem); line-height:1.05; }
+.scene__title .wm{ display:inline-block; overflow:hidden; vertical-align:top; padding-bottom:.06em; }
+.scene__title .ww{ display:inline-block; }
+.scene__blurb{ margin-top:.5rem; font-size:.95rem; line-height:1.5; color:var(--muted); }
+
+.hero__btn{
+  pointer-events:auto; display:inline-flex; align-items:center; gap:.6em;
+  margin-top:1.9rem; padding:.9em 1.7em; border-radius:100px;
+  background:var(--text); color:#140a22!important; font-weight:600; font-size:.92rem;
+  transition:transform .3s var(--ease), box-shadow .3s;
+  box-shadow:0 10px 30px -12px rgba(255,46,136,.5);
+}
+.hero__btn::after{ content:"→"; transition:transform .3s var(--ease); }
+.hero__btn:hover{ transform:translateY(-2px); }
+.hero__btn:hover::after{ transform:translateX(4px); }
+
+/* simple entrance (title is animated by JS) */
+.js .hero__eyebrow, .js .hero__lead, .js .scene, .js .hero__btn{
+  opacity:0; transform:translateY(18px); transition:opacity .8s var(--ease), transform .8s var(--ease);
+}
+.js .hero__title .tl{ opacity:0; }   /* hidden until JS reveals it (no FOUC) */
+.stage.ready .hero__eyebrow, .stage.ready .hero__lead, .stage.ready .scene, .stage.ready .hero__btn{ opacity:1; transform:none; }
+.stage.ready .hero__eyebrow{ transition-delay:.05s; }
+.stage.ready .hero__lead{ transition-delay:.42s; }
+.stage.ready .scene{ transition-delay:.52s; }
+.stage.ready .hero__btn{ transition-delay:.62s; }
+
+/* ---------- gallery (accordion) ---------- */
+.gallery{
+  position:absolute; inset:0; z-index:2;
+  display:flex; gap:var(--gap);
+  /* top clears the floating topbar, bottom clears the dots — no more dead space */
+  padding:clamp(52px,7vh,78px) var(--pad) clamp(46px,6vh,64px);
+}
+.card{
+  position:relative; flex:1 1 0%; min-width:0;
+  border-radius:var(--radius); overflow:hidden; cursor:pointer; outline:none;
+  box-shadow:0 22px 50px -24px rgba(0,0,0,.8);
+  transition:flex-grow .9s var(--ease), box-shadow .6s var(--ease);
+}
+.card.is-active{
+  flex-grow:6.2;
+  box-shadow:0 34px 76px -22px color-mix(in srgb, var(--accent) 42%, transparent), 0 22px 50px -24px rgba(0,0,0,.85);
+}
+.card:focus-visible{ box-shadow:0 0 0 2px var(--accent), 0 22px 50px -24px rgba(0,0,0,.8); }
+
+/* plain image — NO transform / will-change / filter, so it never re-rasters or blurs */
+.card__img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; }
+
+/* darken inactive panels with an opacity veil (no animated filter) */
+.card__veil{
+  position:absolute; inset:0; pointer-events:none; opacity:.42; transition:opacity .7s var(--ease);
+  background:
+    linear-gradient(to top, rgba(7,4,15,.7) 0%, rgba(7,4,15,.08) 42%, transparent 64%),
+    rgba(6,3,15,.34);
+}
+.card.is-active .card__veil{ opacity:1; background:linear-gradient(to top, rgba(7,4,15,.78) 0%, rgba(7,4,15,.06) 40%, transparent 62%); }
+
+/* steady neon ring on active */
+.card__ring{
+  position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  border:1px solid color-mix(in srgb, var(--accent) 60%, transparent);
+  opacity:0; transition:opacity .6s var(--ease);
+  box-shadow:inset 0 0 30px -8px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+.card.is-active .card__ring{ opacity:1; }
+
+.card__no{
+  position:absolute; top:14px; left:0; right:0; text-align:center;
+  font-family:"Space Grotesk", sans-serif; font-weight:700; font-size:.86rem; letter-spacing:.1em;
+  color:rgba(255,255,255,.72); text-shadow:0 2px 10px rgba(0,0,0,.6); transition:opacity .4s var(--ease);
+}
+.card.is-active .card__no{ opacity:0; }
+
+.card__cap{
+  position:absolute; right:clamp(18px,1.8vw,30px); bottom:clamp(16px,2.2vh,28px);
+  z-index:2; text-align:right; opacity:0; transform:translateY(14px);
+  transition:opacity .5s .12s var(--ease), transform .5s .12s var(--ease);
+}
+.card.is-active .card__cap{ opacity:1; transform:none; }
+.card__t{ display:block; font-family:"Space Grotesk", sans-serif; font-weight:700; font-size:clamp(1.3rem,.9rem + 1.5vw,2.3rem); line-height:1; text-shadow:0 4px 24px rgba(0,0,0,.6); }
+.card__b{ display:block; margin-top:.5rem; font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); }
+
+/* ---------- dots ---------- */
+.dots{ position:absolute; z-index:6; left:50%; bottom:clamp(16px,2.5vh,26px); transform:translateX(-50%); display:flex; gap:11px; }
+.dot{ width:9px; height:9px; border-radius:50%; border:0; padding:0; cursor:pointer; background:rgba(255,255,255,.26); transition:background .4s var(--ease), transform .4s var(--ease); }
+.dot:hover{ background:rgba(255,255,255,.55); }
+.dot.is-on{ background:var(--accent); transform:scale(1.25); }
+
+/* grain */
+.grain{ position:fixed; inset:0; z-index:9; pointer-events:none; background:url("/textures/grain.png"); opacity:.05; }
+
+/* ---------- mobile ---------- */
+@media (max-width:820px){
+  body{ overflow-y:auto; }
+  .px--orb{ padding-bottom:15vh; }
+  .cosmos__lead{ max-width:36ch; }
+  .stage{ height:auto; min-height:100svh; padding-bottom:30px; }
+  .stage::after{ background:linear-gradient(180deg, rgba(8,5,18,.9) 0%, rgba(8,5,18,.2) 22%, transparent 40%); }
+  .hero{ position:relative; top:auto; transform:none; left:auto; margin:clamp(86px,15vh,120px) auto 26px; padding:0 24px; max-width:none; }
+  .gallery{ position:relative; inset:auto; height:auto; padding:0 16px 8px; gap:10px; overflow-x:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; }
+  .gallery::-webkit-scrollbar{ display:none; }
+  .card{ flex:0 0 70%; height:64vh; scroll-snap-align:center; }
+  .card.is-active{ flex:0 0 80%; }
+  .card__cap{ left:20px; right:auto; text-align:left; }
+  .dots{ position:relative; left:auto; transform:none; bottom:auto; margin:20px auto 6px; justify-content:center; }
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion:reduce){
+  html{ scroll-behavior:auto; }
+  *{ transition-duration:.001ms !important; animation:none !important; }
+}

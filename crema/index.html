@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRÈMA — Small-batch specialty espresso</title>
+  <meta name="description" content="CRÈMA — a small-batch specialty roastery. Choose your roast, taste the difference, and pull every shot to the gram." />
+  <meta property="og:title" content="CRÈMA — Small-batch specialty espresso" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="/photos/crema/hero-cup.png" />
+  <script>document.documentElement.classList.add('js')</script>
+  <link rel="stylesheet" href="./crema.css" />
+</head>
+<body>
+
+  <!-- fixed brand bar -->
+  <header class="topbar">
+    <a class="topbar__brand" href="#top">CRÈMA</a>
+    <nav class="topbar__nav" aria-label="Primary">
+      <a href="#menu">Menu</a>
+      <a href="#ritual">Ritual</a>
+      <a class="topbar__cta" href="#visit">Find us</a>
+    </nav>
+  </header>
+
+  <!-- ===================== HERO — the roast bar ===================== -->
+  <section class="brew" id="top">
+
+    <div class="brew__bg" aria-hidden="true">
+      <div class="roastbg roastbg--light"></div>
+      <div class="roastbg roastbg--medium is-on"></div>
+      <div class="roastbg roastbg--dark"></div>
+      <div class="roastbg roastbg--espresso"></div>
+    </div>
+
+    <div class="brew__cupwrap">
+      <img class="brew__cup" src="/photos/crema/hero-cup.png" alt="A freshly pulled double espresso topped with golden crema in a stone-cream cup" width="1100" height="917" fetchpriority="high" decoding="async" />
+      <div class="steam" aria-hidden="true">
+        <span style="--x:-64px; --d:0s"></span>
+        <span style="--x:-22px; --d:1.4s"></span>
+        <span style="--x:14px;  --d:.6s"></span>
+        <span style="--x:52px;  --d:2.1s"></span>
+        <span style="--x:90px;  --d:1.0s"></span>
+      </div>
+    </div>
+
+    <div class="brew__content">
+      <p class="brew__eyebrow">Specialty espresso · Small-batch roastery</p>
+
+      <h1 class="brew__title">
+        <span class="ln"><i>Roasted for</i></span>
+        <span class="ln hot"><i>the ritual</i></span>
+      </h1>
+
+      <p class="brew__lead">We roast in small batches and pull every shot to the gram. Choose a roast below — the room changes with it.</p>
+
+      <div class="roast" role="group" aria-label="Choose a roast level">
+        <div class="roast__main">
+          <div class="roast__segs">
+            <button class="roast__seg" type="button" data-i="0">Light</button>
+            <button class="roast__seg is-on" type="button" data-i="1" aria-pressed="true">Medium</button>
+            <button class="roast__seg" type="button" data-i="2">Dark</button>
+            <button class="roast__seg" type="button" data-i="3">Espresso</button>
+          </div>
+          <p class="roast__notes" aria-live="polite">
+            <b id="roastBody">Balanced &amp; sweet</b>
+            <span id="roastNotes">caramel · toasted almond · cherry</span>
+          </p>
+        </div>
+        <img class="roast__beans" id="roastBeans" src="/photos/crema/beans/medium.png" alt="Medium roast coffee beans" width="900" height="681" decoding="async" />
+      </div>
+
+      <a class="brew__cta" href="#menu"><span>Explore the menu</span></a>
+    </div>
+
+    <a class="brew__scroll" href="#menu" aria-label="Scroll to the menu">
+      <span>Scroll</span>
+      <span class="brew__scrollLine" aria-hidden="true"></span>
+    </a>
+  </section>
+
+  <!-- ===================== MARQUEE ===================== -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <span class="marquee__row">Espresso — Cortado — Flat White — Cappuccino — Pour-over — Cold Brew — Macchiato — Americano —&nbsp;</span>
+      <span class="marquee__row">Espresso — Cortado — Flat White — Cappuccino — Pour-over — Cold Brew — Macchiato — Americano —&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- ===================== FEATURE — the pour ===================== -->
+  <section class="feature">
+    <img class="feature__img" src="/photos/crema/pour.jpg" alt="Steamed milk poured into espresso forming a rosetta in the golden crema" width="1600" height="1073" loading="lazy" decoding="async" />
+    <div class="feature__cap">
+      <p class="sec-eyebrow">The pour</p>
+      <h2 class="feature__title">Milk, folded glossy</h2>
+      <p class="feature__text">Steamed to a tight microfoam and poured slow — so the crema keeps its tiger and the first sip is pure silk.</p>
+    </div>
+  </section>
+
+  <!-- ===================== MENU ===================== -->
+  <section class="menu" id="menu">
+    <header class="menu__head">
+      <p class="sec-eyebrow">The Bar</p>
+      <h2 class="sec-title">Pulled to the gram</h2>
+    </header>
+
+    <ul class="menu__list" role="list">
+      <li class="menu__item">
+        <span class="menu__name">Espresso</span>
+        <span class="menu__lead-dots" aria-hidden="true"></span>
+        <span class="menu__desc">Double ristretto · 18g in, 36g out</span>
+        <span class="menu__price">3.5</span>
+      </li>
+      <li class="menu__item">
+        <span class="menu__name">Cortado</span>
+        <span class="menu__lead-dots" aria-hidden="true"></span>
+        <span class="menu__desc">Espresso cut with warm milk</span>
+        <span class="menu__price">4.0</span>
+      </li>
+      <li class="menu__item">
+        <span class="menu__name">Flat White</span>
+        <span class="menu__lead-dots" aria-hidden="true"></span>
+        <span class="menu__desc">Ristretto + silk microfoam</span>
+        <span class="menu__price">4.5</span>
+      </li>
+      <li class="menu__item">
+        <span class="menu__name">Cappuccino</span>
+        <span class="menu__lead-dots" aria-hidden="true"></span>
+        <span class="menu__desc">Equal parts, dry foam, cocoa dusted</span>
+        <span class="menu__price">4.5</span>
+      </li>
+      <li class="menu__item">
+        <span class="menu__name">Pour-over</span>
+        <span class="menu__lead-dots" aria-hidden="true"></span>
+        <span class="menu__desc">Single-origin · V60 · 1:16</span>
+        <span class="menu__price">5.0</span>
+      </li>
+      <li class="menu__item">
+        <span class="menu__name">Cold Brew</span>
+        <span class="menu__lead-dots" aria-hidden="true"></span>
+        <span class="menu__desc">18-hour steep, poured on tap</span>
+        <span class="menu__price">4.5</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ===================== RITUAL ===================== -->
+  <section class="ritual" id="ritual">
+    <header class="ritual__head">
+      <p class="sec-eyebrow">The Ritual</p>
+      <h2 class="sec-title">Three steps, every time</h2>
+    </header>
+
+    <ol class="ritual__steps" role="list">
+      <li class="step">
+        <img class="step__img" src="/photos/crema/ritual-weigh.jpg" alt="A portafilter dosed with finely ground coffee resting on a scale" width="1128" height="1400" loading="lazy" decoding="async" />
+        <span class="step__no">01</span>
+        <h3 class="step__name">Weigh</h3>
+        <p class="step__desc">Eighteen grams, ground fine and dosed level. Consistency starts on the scale.</p>
+      </li>
+      <li class="step">
+        <img class="step__img" src="/photos/crema/ritual-pull.jpg" alt="Twin ropes of espresso streaming from a chrome portafilter into a glass" width="1128" height="1400" loading="lazy" decoding="async" />
+        <span class="step__no">02</span>
+        <h3 class="step__name">Pull</h3>
+        <p class="step__desc">Twenty-seven seconds at nine bars. We watch the crema turn from blonde to tiger.</p>
+      </li>
+      <li class="step">
+        <img class="step__img" src="/photos/crema/ritual-pour.jpg" alt="A pitcher folding steamed milk into espresso to form latte art" width="1128" height="1400" loading="lazy" decoding="async" />
+        <span class="step__no">03</span>
+        <h3 class="step__name">Pour</h3>
+        <p class="step__desc">Milk steamed to sixty degrees, folded glossy, and poured slow into the cup.</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ===================== FOOTER / VISIT ===================== -->
+  <footer class="foot" id="visit">
+    <img class="foot__bg" src="/photos/crema/atmosphere.jpg" alt="" aria-hidden="true" width="1600" height="893" loading="lazy" decoding="async" />
+    <div class="foot__top">
+      <div class="foot__col">
+        <p class="sec-eyebrow">Find us</p>
+        <p class="foot__line">14 Kiln Lane</p>
+        <p class="foot__line">Open 7am – 4pm, daily</p>
+      </div>
+      <div class="foot__col foot__col--right">
+        <p class="sec-eyebrow">Take some home</p>
+        <a class="foot__order" href="#top"><span>Order beans</span></a>
+      </div>
+    </div>
+    <p class="foot__wordmark" aria-hidden="true">CRÈMA</p>
+    <p class="foot__fine">Small-batch roastery · Pulled to the gram · © CRÈMA</p>
+  </footer>
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <script type="module" src="./crema.js"></script>
+</body>
+</html>

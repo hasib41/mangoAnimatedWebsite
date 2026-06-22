@@ -1,0 +1,6 @@
+/* PROJECT styles — co-located with this folder's index.html */
+:root{ --bg:#0b0716; --text:#f3eef9; --accent:#4ad9ff; }
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{ min-height:100vh; background:var(--bg); color:var(--text); font-family:"Inter",system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+.stage{ min-height:100vh; display:grid; place-items:center; }
+h1{ font-family:"Space Grotesk",sans-serif; font-weight:700; font-size:clamp(2rem,1rem+5vw,5rem); letter-spacing:-.01em; }

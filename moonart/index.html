@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EXPLORE MOON ART — Synthwave dreamscape gallery</title>
+  <meta name="description" content="Explore Moon Art — an expanding gallery of six synthwave moon & sky dreamscapes. Hover to expand, or watch them drift." />
+  <meta property="og:image" content="/photos/moonart/sun.jpg" />
+  <link rel="icon" type="image/png" href="/favicon-moonart.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="/photos/moonart/peaks.jpg" />
+  <script>document.documentElement.classList.add('js')</script>
+  <link rel="stylesheet" href="./moonart.css" />
+</head>
+<body>
+
+  <!-- fixed brand bar, visible across both screens -->
+  <header class="topbar">
+    <a class="topbar__brand" href="#top">MOON<span>·</span>ART</a>
+    <nav class="topbar__nav">
+      <a href="#stage">Gallery</a>
+      <a href="#">Prints</a>
+      <a class="topbar__cta" href="#stage">Collect</a>
+    </nav>
+  </header>
+
+  <!-- ===================== SCREEN 1 — cosmic parallax hero ===================== -->
+  <section class="cosmos" id="top" aria-label="Intro">
+
+    <div class="cosmos__sky" aria-hidden="true">
+      <div class="px" data-depth="5"><div class="cosmos__stars cosmos__stars--far" id="starsFar"></div></div>
+      <div class="px" data-depth="9"><div class="cosmos__haze"></div></div>
+      <div class="px" data-depth="14"><div class="cosmos__stars cosmos__stars--near" id="starsNear"></div></div>
+      <div class="px px--orb" data-depth="20">
+        <div class="cosmos__orb"><span class="cosmos__orbRing"></span></div>
+      </div>
+    </div>
+
+    <div class="cosmos__content" data-depth="-6">
+      <p class="cosmos__eyebrow">Synthwave Dreamscapes · 06 Scenes</p>
+      <h1 class="cosmos__title">
+        <span class="ln"><i>Explore</i></span>
+        <span class="ln grad"><i>Moon</i></span>
+        <span class="ln"><i>Art</i></span>
+      </h1>
+      <p class="cosmos__lead">Six neon moons and quiet horizons, suspended in deep space. Drift through the gallery below — or just let them breathe.</p>
+      <a class="cosmos__cta" href="#stage"><span>Enter the gallery</span></a>
+    </div>
+
+    <a class="cosmos__scroll" href="#stage" aria-label="Scroll to the gallery">
+      <span>Scroll</span>
+      <span class="cosmos__scrollLine" aria-hidden="true"></span>
+    </a>
+
+  </section>
+
+  <!-- ===================== SCREEN 2 — accordion gallery ===================== -->
+  <main class="stage" id="stage">
+
+    <section class="hero">
+      <p class="hero__eyebrow">The Collection</p>
+      <div class="scene">
+        <span class="scene__no"><b id="sNo">01</b><i>/ 06</i></span>
+        <h2 class="scene__title" id="sTitle">Lunar Crest</h2>
+        <p class="scene__blurb" id="sBlurb">A neon crescent over frozen peaks.</p>
+      </div>
+    </section>
+
+    <div class="gallery" id="gallery" role="list" aria-label="Moon art gallery">
+
+      <article class="card is-active" role="listitem" tabindex="0" data-accent="#4ad9ff"
+        data-title="Lunar Crest" data-blurb="A neon crescent over frozen peaks.">
+        <img class="card__img" src="/photos/moonart/peaks.jpg" alt="Neon crescent moon glowing over snow-capped mountain peaks at night" width="1540" height="2063" fetchpriority="high" decoding="async" />
+        <span class="card__veil" aria-hidden="true"></span>
+        <span class="card__ring" aria-hidden="true"></span>
+        <span class="card__no" aria-hidden="true">01</span>
+        <figcaption class="card__cap"><span class="card__t">Lunar Crest</span><span class="card__b">Neon crescent · frozen peaks</span></figcaption>
+      </article>
+
+      <article class="card" role="listitem" tabindex="0" data-accent="#ff2e88"
+        data-title="Solar Drift" data-blurb="A magenta sun melting into still water.">
+        <img class="card__img" src="/photos/moonart/sun.jpg" alt="Giant magenta sun setting over calm mirror-still water" width="1540" height="2063" decoding="async" />
+        <span class="card__veil" aria-hidden="true"></span>
+        <span class="card__ring" aria-hidden="true"></span>
+        <span class="card__no" aria-hidden="true">02</span>
+        <figcaption class="card__cap"><span class="card__t">Solar Drift</span><span class="card__b">Magenta sun · still water</span></figcaption>
+      </article>
+
+      <article class="card" role="listitem" tabindex="0" data-accent="#ff8a5c"
+        data-title="Paradise Dusk" data-blurb="Palms, a lone deer, a mirrored lagoon.">
+        <img class="card__img" src="/photos/moonart/beach.jpg" alt="Tropical lagoon at sunset framed by palm trees with a lone deer silhouette" width="1540" height="2063" decoding="async" />
+        <span class="card__veil" aria-hidden="true"></span>
+        <span class="card__ring" aria-hidden="true"></span>
+        <span class="card__no" aria-hidden="true">03</span>
+        <figcaption class="card__cap"><span class="card__t">Paradise Dusk</span><span class="card__b">Palms · mirrored lagoon</span></figcaption>
+      </article>
+
+      <article class="card" role="listitem" tabindex="0" data-accent="#8aa6ff"
+        data-title="Silent Temple" data-blurb="A pagoda beneath an ocean of stars.">
+        <img class="card__img" src="/photos/moonart/pagoda.jpg" alt="Silhouette of a Japanese pagoda under a vast starry night sky" width="1540" height="2063" decoding="async" />
+        <span class="card__veil" aria-hidden="true"></span>
+        <span class="card__ring" aria-hidden="true"></span>
+        <span class="card__no" aria-hidden="true">04</span>
+        <figcaption class="card__cap"><span class="card__t">Silent Temple</span><span class="card__b">Pagoda · ocean of stars</span></figcaption>
+      </article>
+
+      <article class="card" role="listitem" tabindex="0" data-accent="#ff5252"
+        data-title="Blood Moon" data-blurb="A crimson moon over sleeping hills.">
+        <img class="card__img" src="/photos/moonart/crimson.jpg" alt="Enormous crimson blood moon over dark silhouetted rolling hills" width="1540" height="2063" decoding="async" />
+        <span class="card__veil" aria-hidden="true"></span>
+        <span class="card__ring" aria-hidden="true"></span>
+        <span class="card__no" aria-hidden="true">05</span>
+        <figcaption class="card__cap"><span class="card__t">Blood Moon</span><span class="card__b">Crimson moon · sleeping hills</span></figcaption>
+      </article>
+
+      <article class="card" role="listitem" tabindex="0" data-accent="#9fb8ff"
+        data-title="Desert Moon" data-blurb="A pale moon adrift over cold dunes.">
+        <img class="card__img" src="/photos/moonart/dunes.jpg" alt="Pale full moon over rolling blue desert dunes at night" width="1540" height="2063" decoding="async" />
+        <span class="card__veil" aria-hidden="true"></span>
+        <span class="card__ring" aria-hidden="true"></span>
+        <span class="card__no" aria-hidden="true">06</span>
+        <figcaption class="card__cap"><span class="card__t">Desert Moon</span><span class="card__b">Pale moon · cold dunes</span></figcaption>
+      </article>
+
+    </div>
+
+    <div class="dots" id="dots" role="tablist" aria-label="Select scene"></div>
+
+  </main>
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <script type="module" src="./moonart.js"></script>
+</body>
+</html>

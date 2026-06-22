@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MONOLITH — Impossible Architecture, in coverflow</title>
+  <meta name="description" content="MONOLITH — a drifting coverflow gallery of six impossible monuments. Drag, scroll, or let it glide." />
+  <meta property="og:image" content="/photos/monolith/arcade.jpg" />
+  <link rel="icon" type="image/png" href="/favicon-monolith.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="/photos/monolith/arcade.jpg" />
+  <script>document.documentElement.classList.add('js')</script>
+  <link rel="stylesheet" href="./monolith.css" />
+</head>
+<body>
+
+  <main class="stage" id="stage">
+
+    <header class="topbar">
+      <a class="topbar__brand" href="#">MONOLITH<span aria-hidden="true">°</span></a>
+      <nav class="topbar__nav" aria-label="Primary">
+        <a href="#">Index</a>
+        <a href="#">Studio</a>
+        <a class="topbar__cta" id="cta" href="#">Commission</a>
+      </nav>
+    </header>
+
+    <p class="eyebrow">Impossible Architecture · <b id="count">06</b> Monuments</p>
+
+    <section class="deck" id="deck" aria-roledescription="carousel" aria-label="Monument coverflow">
+
+      <div class="deck__glow" aria-hidden="true"></div>
+
+      <div class="track" id="track" role="list">
+
+        <article class="card" role="listitem" tabindex="0" data-accent="#ff5b3a"
+          data-title="Vermillion Arcade" data-place="Marrakesh Mirage"
+          data-blurb="An endless terracotta colonnade marching into a flat cobalt sky.">
+          <div class="card__face">
+            <img class="card__img" src="/photos/monolith/arcade.jpg" width="1194" height="1600"
+              alt="An impossibly long terracotta arched colonnade receding under a deep blue sky"
+              fetchpriority="high" decoding="async" />
+            <span class="card__veil" aria-hidden="true"></span>
+            <span class="card__no" aria-hidden="true">01</span>
+          </div>
+          <div class="card__reflect" aria-hidden="true" style="background-image:url('/photos/monolith/arcade.jpg')"></div>
+        </article>
+
+        <article class="card" role="listitem" tabindex="0" data-accent="#3a86ff"
+          data-title="Cobalt Spire" data-place="Nordsund"
+          data-blurb="A single cobalt tower twisting up through a pale, weightless sky.">
+          <div class="card__face">
+            <img class="card__img" src="/photos/monolith/spire.jpg" width="1194" height="1600"
+              alt="A lone twisting cobalt-blue tower against a pale sky" decoding="async" />
+            <span class="card__veil" aria-hidden="true"></span>
+            <span class="card__no" aria-hidden="true">02</span>
+          </div>
+          <div class="card__reflect" aria-hidden="true" style="background-image:url('/photos/monolith/spire.jpg')"></div>
+        </article>
+
+        <article class="card" role="listitem" tabindex="0" data-accent="#f4a52b"
+          data-title="Saffron Amphitheatre" data-place="Jaipur Sun"
+          data-blurb="A vast ochre staircase folding back on itself beneath a clear sun.">
+          <div class="card__face">
+            <img class="card__img" src="/photos/monolith/steps.jpg" width="1194" height="1600"
+              alt="A monumental geometric ochre staircase amphitheatre under clear sky" decoding="async" />
+            <span class="card__veil" aria-hidden="true"></span>
+            <span class="card__no" aria-hidden="true">03</span>
+          </div>
+          <div class="card__reflect" aria-hidden="true" style="background-image:url('/photos/monolith/steps.jpg')"></div>
+        </article>
+
+        <article class="card" role="listitem" tabindex="0" data-accent="#1fc6a0"
+          data-title="Mint Pavilion" data-place="Still Water"
+          data-blurb="A weightless mint canopy mirrored in a perfectly still reflecting pool.">
+          <div class="card__face">
+            <img class="card__img" src="/photos/monolith/pavilion.jpg" width="1194" height="1600"
+              alt="A minimalist curved mint-green pavilion reflected in a still pool" decoding="async" />
+            <span class="card__veil" aria-hidden="true"></span>
+            <span class="card__no" aria-hidden="true">04</span>
+          </div>
+          <div class="card__reflect" aria-hidden="true" style="background-image:url('/photos/monolith/pavilion.jpg')"></div>
+        </article>
+
+        <article class="card" role="listitem" tabindex="0" data-accent="#ff5f9e"
+          data-title="Rose Monolith" data-place="Dawn Quarry"
+          data-blurb="One colossal smooth pink block, severe against a gradient dawn.">
+          <div class="card__face">
+            <img class="card__img" src="/photos/monolith/monolith.jpg" width="1194" height="1600"
+              alt="A colossal smooth rose-pink monolith block against a soft gradient sky" decoding="async" />
+            <span class="card__veil" aria-hidden="true"></span>
+            <span class="card__no" aria-hidden="true">05</span>
+          </div>
+          <div class="card__reflect" aria-hidden="true" style="background-image:url('/photos/monolith/monolith.jpg')"></div>
+        </article>
+
+        <article class="card" role="listitem" tabindex="0" data-accent="#8b6bff"
+          data-title="Violet Causeway" data-place="The Long Crossing"
+          data-blurb="A receding arcade of violet arches dissolving into cold mist.">
+          <div class="card__face">
+            <img class="card__img" src="/photos/monolith/causeway.jpg" width="1194" height="1600"
+              alt="A long receding causeway of violet arches fading into mist" decoding="async" />
+            <span class="card__veil" aria-hidden="true"></span>
+            <span class="card__no" aria-hidden="true">06</span>
+          </div>
+          <div class="card__reflect" aria-hidden="true" style="background-image:url('/photos/monolith/causeway.jpg')"></div>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="caption" id="caption" aria-live="polite">
+      <span class="caption__no"><b id="cNo">01</b><i>/ 06</i></span>
+      <h1 class="caption__title" id="cTitle">Vermillion Arcade</h1>
+      <p class="caption__place" id="cPlace">Marrakesh Mirage</p>
+      <p class="caption__blurb" id="cBlurb">An endless terracotta colonnade marching into a flat cobalt sky.</p>
+    </section>
+
+    <div class="controls">
+      <button class="nav nav--prev" id="prev" type="button" aria-label="Previous monument">
+        <svg class="nav__ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="ticks" id="ticks" role="tablist" aria-label="Select monument"></div>
+      <button class="nav nav--next" id="next" type="button" aria-label="Next monument">
+        <svg class="nav__ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg class="nav__ring" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22"/></svg>
+      </button>
+    </div>
+
+    <p class="hint" id="hint" aria-hidden="true"><span>Drag</span> · scroll · arrows</p>
+
+  </main>
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <script type="module" src="./monolith.js"></script>
+</body>
+</html>
