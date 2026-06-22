@@ -194,13 +194,13 @@ closeBtn.addEventListener('click', closeLetter);
    ============================================================ */
 const DEFAULT_HINT = 'Hold to draw the bow — release to shoot ♡';
 const MISS_HINTS = ['So close — try again ♡', 'Aim for the heart ♡', 'Cupid never misses twice ♡'];
-const ARROW_LEN  = 46;            // tail → arrowhead tip, px
+const ARROW_LEN  = 56;            // tail → arrowhead tip, px (matches the .arrow CSS)
 
 // ---- archery feel (a real shot, not a robotic snap) ----
 const MIN_DRAW   = 6;             // px the nock pulls back the instant you press
 const MAX_DRAW   = 34;            // px at full draw
 const DRAW_TIME  = 380;           // ms of holding to reach full draw (power builds)
-const FLEX       = 0.30;          // how much the bow limbs bend at full draw
+const FLEX       = 0.12;          // how much the bow limbs bend at full draw (subtle, not rubbery)
 const BASE_SPEED = 8.5;           // launch px/frame at minimum draw
 const MAX_SPEED  = 17;            // launch px/frame at full draw (more draw = more power)
 const GRAVITY    = 0.03;          // gentle sag → a natural arc, not a laser line
