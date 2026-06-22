@@ -485,7 +485,7 @@ noBtn.addEventListener('focus', dodge);          // keyboard tab
    ============================================================ */
 function sayYes(){
   catState = 'happy';
-  title.textContent = 'Yippeeee!';
+  title.textContent = 'Yayyy! I love you ♡';
   drawSprite(catCanvas, CAT_HAPPY);
   catCanvas.setAttribute('aria-label', 'A happy cat with a bow');
 
@@ -504,7 +504,7 @@ function sayYes(){
 
   content.classList.add('is-won');
   win.classList.add('is-celebrate');
-  if (!reduceMotion){ heartBurst(); rainHearts(); }
+  if (!reduceMotion){ heartBurst(); celebrate(); }
 }
 
 yesBtn.addEventListener('click', sayYes);
@@ -537,22 +537,84 @@ function heartBurst(n = 22){
     catCanvas.offsetTop  + catCanvas.offsetHeight / 2, n);
 }
 
-// celebratory hearts raining across the whole screen on win
-function rainHearts(n = 28){
+/* ============================================================
+   CELEBRATION — a real "tada": heart-confetti cannons fire up
+   from the two bottom corners and arc back down under gravity,
+   with a light fall from the top, for ~3 seconds. Many colours,
+   big hearts, all driven by one rAF physics loop.
+   ============================================================ */
+const LOVE_COLORS = [
+  '#e8546a', '#ff5d8f', '#d83a52', '#f08aa0', '#ff8fab',
+  '#c83048', '#ff7eb3', '#c79bff', '#ff9e6b', '#ffd56b', '#f6b3c2',
+];
+const rand = (a, b) => a + Math.random() * (b - a);
+const pick = (arr) => arr[(Math.random() * arr.length) | 0];
+
+const GRAVITY_C = 0.20;   // gentle gravity → hearts float high and fall slowly
+const DRAG_C    = 0.993;  // a touch of air resistance so they settle
+
+const confetti = [];      // live particles
+let confettiRAF = 0;
+let confettiTimer = 0;
+
+function addConfetti(x, y, vx, vy, size){
+  const el = document.createElement('span');
+  el.className = 'heart confetti-heart';
+  el.style.width = el.style.height = size.toFixed(0) + 'px';
+  el.style.background = pick(LOVE_COLORS);
+  rainBox.appendChild(el);
+  confetti.push({ el, x, y, vx, vy, rot: rand(0, 360), vrot: rand(-7, 7), age: 0, life: rand(2.6, 3.6) });
+}
+
+// a popper: fire `n` hearts from (x,y) toward `ang` (rad) with spread
+function popper(x, y, ang, n){
   for (let i = 0; i < n; i++){
-    const h = document.createElement('span');
-    h.className = 'heart rainheart';
-    const size = 8 + Math.random() * 16;
-    h.style.width = h.style.height = size + 'px';
-    h.style.left = Math.random() * 100 + 'vw';
-    h.style.background = CONFETTI_COLORS[(Math.random() * CONFETTI_COLORS.length) | 0];
-    h.style.setProperty('--rx', (Math.random() * 80 - 40) + 'px');
-    h.style.setProperty('--rr', (Math.random() * 140 - 70) + 'deg');
-    h.style.animationDuration = (2.4 + Math.random() * 2).toFixed(2) + 's';
-    h.style.animationDelay = (Math.random() * 0.8).toFixed(2) + 's';
-    h.addEventListener('animationend', () => h.remove());
-    rainBox.appendChild(h);
+    const a  = ang + rand(-0.42, 0.42);
+    const sp = rand(14, 21);                       // gentle launch → a tall, slow arc
+    addConfetti(x, y, Math.cos(a) * sp, Math.sin(a) * sp, rand(48, 96));  // big hearts, wide size variety
   }
+}
+
+function confettiBurst(){
+  const W = innerWidth, H = innerHeight;
+  popper(-14,    H + 14, -Math.PI * 0.34, 5);      // left   → up & inward (steep, climbs high)
+  popper(W + 14, H + 14, -Math.PI * 0.66, 5);      // right  → up & inward
+  popper(W / 2,  H + 14, -Math.PI * 0.50, 5);      // bottom → a tall fountain straight up
+}
+
+function confettiTick(){
+  confettiRAF = 0;
+  const H = innerHeight;
+  for (let i = confetti.length - 1; i >= 0; i--){
+    const p = confetti[i];
+    p.vy += GRAVITY_C;
+    p.vx *= DRAG_C; p.vy *= DRAG_C;
+    p.x += p.vx; p.y += p.vy; p.rot += p.vrot; p.age += 1 / 60;
+    const o = p.age < 0.1 ? p.age / 0.1 : Math.max(0, 1 - (p.age - 0.1) / p.life);
+    p.el.style.opacity = o.toFixed(2);
+    p.el.style.transform = `translate3d(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px, 0) rotate(${p.rot | 0}deg)`;
+    if (o <= 0 || p.y > H + 120){ p.el.remove(); confetti.splice(i, 1); }
+  }
+  if (confetti.length) confettiRAF = requestAnimationFrame(confettiTick);
+}
+
+// fire repeatedly for ~3s, then let the last hearts fall
+function celebrate(){
+  clearInterval(confettiTimer);
+  confettiBurst();
+  let t = 0;
+  confettiTimer = setInterval(() => {
+    t += 360;
+    confettiBurst();
+    if (t >= 2700){ clearInterval(confettiTimer); confettiTimer = 0; }
+  }, 360);
+  if (!confettiRAF) confettiRAF = requestAnimationFrame(confettiTick);
+}
+
+function stopCelebrate(){
+  clearInterval(confettiTimer); confettiTimer = 0;
+  cancelAnimationFrame(confettiRAF); confettiRAF = 0;
+  confetti.length = 0;
 }
 
 // the idle cat blinks now and then
@@ -567,7 +629,7 @@ function blink(){
    ============================================================ */
 function reset(){
   catState = 'idle';
-  title.textContent = 'Do you love me?';
+  title.textContent = 'Happy 1 month, my love ♡ Still love me?';
   drawSprite(catCanvas, CAT_IDLE);
   catCanvas.setAttribute('aria-label', 'A little cat holding a heart');
   buttons.hidden = false;
@@ -576,6 +638,8 @@ function reset(){
   content.classList.remove('is-won');
   win.classList.remove('is-celebrate');
   content.querySelectorAll('.cat-heart, .burst').forEach((el) => el.remove());
+  stopCelebrate();             // halt the confetti loop + spawner
+  rainBox.replaceChildren();   // clear any celebration hearts still on screen
   yesScale = 1;
   yesBtn.style.transform = '';
   yesBtn.classList.remove('is-tempting');

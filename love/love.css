@@ -559,6 +559,15 @@ body{
   100% { opacity:0; transform:translate(var(--bx), var(--by)) scale(1.1); }
 }
 
+/* ---- celebration confetti hearts (position/rotation driven per-frame by JS) ---- */
+.confetti-heart{
+  position:absolute;
+  top:0; left:0;
+  pointer-events:none;
+  opacity:0;
+  will-change:transform, opacity;
+}
+
 /* ============================================================
    RESPONSIVE
    ============================================================ */
@@ -587,5 +596,5 @@ body{
   .content.is-won .cat-heart{ animation:none; }
   .confetti .heart{ animation:none; opacity:.55; }
   .window, .stage--aim, .final, .btn{ transition-duration:.001s; }
-  .burst, .trail, .rainheart{ display:none; }
+  .burst, .trail, .rainheart, .confetti-heart{ display:none; }
 }
