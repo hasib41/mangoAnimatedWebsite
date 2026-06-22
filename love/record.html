@@ -1,0 +1,260 @@
+<!doctype html>
+<!--
+  RECORDING RIG (not shipped — not a Vite build input).
+  Tutorial-style frame: the real animation (iframe) + HTML/CSS/JS code panels
+  + a scripted on-screen cursor that chases the runaway NO button 3×.
+  Recorded by /tmp/record.mjs at 540×960 (→ 1080×1920).
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Love Letter — recording rig</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{ width:540px; height:960px; overflow:hidden; }
+  body{
+    position:relative;
+    font-family:"Space Grotesk",system-ui,sans-serif;
+    color:#ece8fb;
+    background:
+      radial-gradient(120% 80% at 20% 0%, #2a1944 0%, transparent 55%),
+      radial-gradient(120% 90% at 85% 100%, #3a1530 0%, transparent 52%),
+      #100a1c;
+  }
+
+  /* ---- header pill ---- */
+  .pill{
+    position:absolute; top:16px; left:50%; transform:translateX(-50%);
+    display:flex; align-items:center; gap:8px;
+    background:rgba(22,16,34,.82);
+    border:1px solid rgba(255,255,255,.08);
+    padding:8px 16px; border-radius:14px;
+    font-size:13px; font-weight:500; letter-spacing:.01em;
+    box-shadow:0 8px 24px -12px #000;
+  }
+  .pill b{ font-weight:700; background:linear-gradient(92deg,#ff5d8f,#ff9ec7); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .pill .dot{ width:7px; height:7px; border-radius:50%; background:#ff5d8f; box-shadow:0 0 10px #ff5d8f; }
+
+  /* ---- device / browser mockup ---- */
+  .device{
+    position:absolute; top:62px; left:18px;
+    width:504px; height:560px;
+    background:#0c0a18; border-radius:18px;
+    box-shadow:0 30px 60px -24px #000, 0 0 0 1px rgba(255,255,255,.05);
+    overflow:hidden;
+  }
+  .device__bar{
+    height:30px; display:flex; align-items:center; gap:7px;
+    padding:0 12px; background:#171327; border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .device__bar i{ width:11px; height:11px; border-radius:50%; }
+  .device__bar i:nth-child(1){ background:#ff5f57; }
+  .device__bar i:nth-child(2){ background:#febc2e; }
+  .device__bar i:nth-child(3){ background:#28c840; }
+  .device__url{
+    margin-left:10px; font-family:"JetBrains Mono",monospace; font-size:10px;
+    color:#9a93b8; background:#0e0b1a; padding:3px 10px; border-radius:7px;
+  }
+  .device iframe{ display:block; width:100%; height:calc(100% - 30px); border:0; background:#f7efe3; }
+
+  /* ---- code panels ---- */
+  .code{
+    position:absolute; left:14px; right:14px; top:636px; height:310px;
+    display:flex; gap:9px;
+  }
+  .panel{
+    flex:1; min-width:0;
+    background:#15111f; border:1px solid rgba(255,255,255,.06);
+    border-radius:11px; padding:9px 10px; overflow:hidden;
+    box-shadow:0 10px 26px -16px #000;
+  }
+  .panel h4{
+    font-family:"JetBrains Mono",monospace; font-size:12px; font-weight:500;
+    margin-bottom:7px; letter-spacing:.06em;
+  }
+  .panel--html h4{ color:#ff7eb6; }
+  .panel--css  h4{ color:#7fb0ff; }
+  .panel--js   h4{ color:#ffd479; }
+  .panel pre{
+    font-family:"JetBrains Mono",monospace;
+    font-size:6.6px; line-height:1.62; color:#cdd0e8; white-space:pre;
+  }
+  /* token colors */
+  .c{ color:#6d6a86; font-style:italic; }
+  .t{ color:#ff7eb6; }
+  .a{ color:#ffb86c; }
+  .s{ color:#a5e075; }
+  .k{ color:#c792ea; }
+  .f{ color:#82aaff; }
+  .n{ color:#f78c6c; }
+
+  /* ---- scripted cursor ---- */
+  .cursor{
+    position:fixed; left:-40px; top:-40px; width:24px; height:24px;
+    z-index:60; pointer-events:none; opacity:0;
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,.5));
+    transition:left .38s cubic-bezier(.4,0,.2,1), top .38s cubic-bezier(.4,0,.2,1), opacity .25s ease;
+  }
+  .cursor.show{ opacity:1; }
+  .cursor.grab{ transition:opacity .25s ease; }   /* lockstep drag — no position easing */
+  .cursor svg{ display:block; transition:transform .1s ease; }
+  .cursor.press svg{ transform:scale(.78); }
+  .cursor.press::after{
+    content:""; position:absolute; left:2px; top:2px;
+    width:18px; height:18px; border-radius:50%;
+    border:2px solid rgba(255,93,143,.9);
+    transform:translate(-50%,-50%); left:3px; top:3px;
+    animation:ring .4s ease-out;
+  }
+  @keyframes ring{ from{ transform:scale(.2); opacity:.9; } to{ transform:scale(1.8); opacity:0; } }
+</style>
+</head>
+<body>
+  <div class="pill"><span class="dot"></span>Valentine Letter — <b>HTML · CSS · JS</b></div>
+
+  <div class="device">
+    <div class="device__bar">
+      <i></i><i></i><i></i>
+      <span class="device__url">localhost / love</span>
+    </div>
+    <iframe id="app" src="/love/?record" title="Love letter animation"></iframe>
+  </div>
+
+  <div class="code">
+    <div class="panel panel--html">
+      <h4>Html</h4>
+<pre><span class="c">&lt;!-- the LOVE window --&gt;</span>
+<span class="t">&lt;section</span> <span class="a">class</span>=<span class="s">"window"</span><span class="t">&gt;</span>
+ <span class="t">&lt;header</span> <span class="a">class</span>=<span class="s">"titlebar"</span><span class="t">&gt;</span>
+  <span class="t">&lt;span&gt;</span>LOVE<span class="t">&lt;/span&gt;</span>
+ <span class="t">&lt;/header&gt;</span>
+ <span class="t">&lt;h1</span> <span class="a">class</span>=<span class="s">"title"</span><span class="t">&gt;</span>
+   Do you love me?<span class="t">&lt;/h1&gt;</span>
+ <span class="t">&lt;canvas</span> <span class="a">id</span>=<span class="s">"cat"</span><span class="t">&gt;&lt;/canvas&gt;</span>
+ <span class="t">&lt;button</span> <span class="a">id</span>=<span class="s">"yesBtn"</span><span class="t">&gt;</span>
+   YES<span class="t">&lt;/button&gt;</span>
+ <span class="t">&lt;button</span> <span class="a">id</span>=<span class="s">"noBtn"</span><span class="t">&gt;</span>
+   NO<span class="t">&lt;/button&gt;</span>
+<span class="t">&lt;/section&gt;</span></pre>
+    </div>
+
+    <div class="panel panel--css">
+      <h4>CSS</h4>
+<pre><span class="c">/* tokens + window */</span>
+<span class="f">:root</span> {
+  <span class="k">--coral</span>: <span class="n">#d97b73</span>;
+  <span class="k">--red</span>: <span class="n">#e23b4e</span>;
+}
+<span class="f">.window</span> {
+  <span class="k">border</span>: <span class="n">5px</span> solid
+    <span class="k">var</span>(--coral);
+  <span class="k">border-radius</span>: <span class="n">12px</span>;
+}
+<span class="f">.btn--no</span> {
+  <span class="k">position</span>: relative;
+  <span class="k">transition</span>:
+    left <span class="n">.18s</span>, top <span class="n">.18s</span>;
+}</pre>
+    </div>
+
+    <div class="panel panel--js">
+      <h4>JS</h4>
+<pre><span class="c">// NO runs away</span>
+<span class="k">function</span> <span class="f">dodge</span>() {
+  noBtn.style.<span class="k">position</span> =
+    <span class="s">'absolute'</span>;
+  noBtn.style.left =
+    <span class="f">rand</span>() + <span class="s">'px'</span>;
+  yesScale += <span class="n">0.07</span>;
+}
+noBtn.<span class="f">on</span>(<span class="s">'enter'</span>, dodge);
+
+yesBtn.<span class="k">onclick</span> = () =&gt; {
+  title.textContent =
+    <span class="s">'Yippeeee!'</span>;
+  <span class="f">rainHearts</span>();
+};</pre>
+    </div>
+  </div>
+
+  <!-- scripted cursor -->
+  <div class="cursor" id="cursor">
+    <svg width="24" height="24" viewBox="0 0 24 24">
+      <path d="M4 2 L4 21 L9.2 16 L12.4 22.5 L15.2 21.2 L12 14.8 L19 14.8 Z"
+            fill="#ffffff" stroke="#1c1830" stroke-width="1.3" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+<script>
+  const iframe = document.getElementById('app');
+  const cursor = document.getElementById('cursor');
+  const api = () => iframe.contentWindow.loveAPI;
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  function centerOf(el){
+    const r = el.getBoundingClientRect();          // iframe-local coords
+    const f = iframe.getBoundingClientRect();        // iframe offset in page
+    return { x: f.left + r.left + r.width / 2, y: f.top + r.top + r.height / 2 };
+  }
+  function moveCursor(pt){ cursor.style.left = (pt.x - 3) + 'px'; cursor.style.top = (pt.y - 2) + 'px'; }
+  async function clickFx(){ cursor.classList.add('press'); await sleep(120); cursor.classList.remove('press'); }
+
+  async function run(){
+    await sleep(450);                  // brief establish
+    cursor.classList.add('show');
+
+    // ---- the cursor grabs the bowstring and throws the arrow ----
+    const nk = centerOf(api().els.nock);
+    moveCursor({ x: nk.x + 34, y: nk.y - 8 });   // reach in
+    await sleep(400);
+    moveCursor({ x: nk.x, y: nk.y });            // onto the string
+    await sleep(250);
+
+    cursor.classList.add('press', 'grab');        // grab + pull back…
+    api().aimUp();
+    const MAX = 24, STEPS = 9;
+    for (let i = 1; i <= STEPS; i++){
+      const d = MAX * i / STEPS;
+      api().setDraw(d);
+      moveCursor({ x: nk.x, y: nk.y + d });       // cursor drags down with the string
+      await sleep(44);
+    }
+    await sleep(300);                             // hold the draw
+
+    cursor.classList.remove('press', 'grab');     // …release → fire!
+    api().release();
+    moveCursor({ x: nk.x, y: nk.y + 8 });         // tiny recoil
+    await sleep(1800);                            // flight + cinematic open (no dead time after)
+
+    // straight to NO — no lull
+    moveCursor({ x: 270, y: 600 });
+    await sleep(180);
+
+    for (let i = 0; i < 3; i++){        // try to press NO three times
+      moveCursor(centerOf(api().els.noBtn));
+      await sleep(480);                 // cursor fully glides onto NO + a beat
+      await clickFx();                  // attempt the click…
+      api().dodge();                    // …and NO leaps away
+      await sleep(320);
+    }
+
+    // give in — click YES (now big & glowing)
+    moveCursor(centerOf(api().els.yesBtn));
+    await sleep(420);
+    await clickFx();
+    api().yes();
+    await sleep(3000);                  // 3s celebration
+
+    cursor.classList.remove('show');
+    window.__done = true;
+  }
+
+  if (iframe.contentWindow && iframe.contentWindow.loveAPI) setTimeout(run, 400);
+  else iframe.addEventListener('load', () => setTimeout(run, 500));
+</script>
+</body>
+</html>
