@@ -556,6 +556,7 @@ const DRAG_C    = 0.993;  // a touch of air resistance so they settle
 const confetti = [];      // live particles
 let confettiRAF = 0;
 let confettiTimer = 0;
+let confScale = 1;        // viewport scale so phones get proportional (not giant) hearts
 
 function addConfetti(x, y, vx, vy, size){
   const el = document.createElement('span');
@@ -570,16 +571,17 @@ function addConfetti(x, y, vx, vy, size){
 function popper(x, y, ang, n){
   for (let i = 0; i < n; i++){
     const a  = ang + rand(-0.42, 0.42);
-    const sp = rand(14, 21);                       // gentle launch → a tall, slow arc
-    addConfetti(x, y, Math.cos(a) * sp, Math.sin(a) * sp, rand(48, 96));  // big hearts, wide size variety
+    const sp = rand(14, 21) * confScale;           // gentle launch → a tall, slow arc
+    addConfetti(x, y, Math.cos(a) * sp, Math.sin(a) * sp, rand(48, 96) * confScale);  // big hearts, wide size variety
   }
 }
 
 function confettiBurst(){
   const W = innerWidth, H = innerHeight;
-  popper(-14,    H + 14, -Math.PI * 0.34, 5);      // left   → up & inward (steep, climbs high)
-  popper(W + 14, H + 14, -Math.PI * 0.66, 5);      // right  → up & inward
-  popper(W / 2,  H + 14, -Math.PI * 0.50, 5);      // bottom → a tall fountain straight up
+  const n = confScale < 0.7 ? 4 : 5;               // fewer particles on small/phone screens
+  popper(-14,    H + 14, -Math.PI * 0.34, n);      // left   → up & inward (steep, climbs high)
+  popper(W + 14, H + 14, -Math.PI * 0.66, n);      // right  → up & inward
+  popper(W / 2,  H + 14, -Math.PI * 0.50, n);      // bottom → a tall fountain straight up
 }
 
 function confettiTick(){
@@ -587,7 +589,7 @@ function confettiTick(){
   const H = innerHeight;
   for (let i = confetti.length - 1; i >= 0; i--){
     const p = confetti[i];
-    p.vy += GRAVITY_C;
+    p.vy += GRAVITY_C * confScale;
     p.vx *= DRAG_C; p.vy *= DRAG_C;
     p.x += p.vx; p.y += p.vy; p.rot += p.vrot; p.age += 1 / 60;
     const o = p.age < 0.1 ? p.age / 0.1 : Math.max(0, 1 - (p.age - 0.1) / p.life);
@@ -601,6 +603,8 @@ function confettiTick(){
 // fire repeatedly for ~3s, then let the last hearts fall
 function celebrate(){
   clearInterval(confettiTimer);
+  // scale the whole effect to the viewport so phones get proportional hearts, not giant ones
+  confScale = Math.max(0.5, Math.min(1.15, Math.min(innerWidth, innerHeight) / 900));
   confettiBurst();
   let t = 0;
   confettiTimer = setInterval(() => {
