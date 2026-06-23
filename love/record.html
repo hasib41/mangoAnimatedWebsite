@@ -39,10 +39,10 @@
   .pill b{ font-weight:700; background:linear-gradient(92deg,#ff5d8f,#ff9ec7); -webkit-background-clip:text; background-clip:text; color:transparent; }
   .pill .dot{ width:7px; height:7px; border-radius:50%; background:#ff5d8f; box-shadow:0 0 10px #ff5d8f; }
 
-  /* ---- device / browser mockup ---- */
+  /* ---- device / browser mockup (portrait — matches the page) ---- */
   .device{
-    position:absolute; top:62px; left:18px;
-    width:504px; height:560px;
+    position:absolute; top:44px; left:70px;
+    width:400px; height:630px;
     background:#0c0a18; border-radius:18px;
     box-shadow:0 30px 60px -24px #000, 0 0 0 1px rgba(255,255,255,.05);
     overflow:hidden;
@@ -63,7 +63,7 @@
 
   /* ---- code panels ---- */
   .code{
-    position:absolute; left:14px; right:14px; top:636px; height:310px;
+    position:absolute; left:14px; right:14px; top:686px; height:260px;
     display:flex; gap:9px;
   }
   .panel{
@@ -204,15 +204,15 @@ yesBtn.<span class="k">onclick</span> = () =&gt; {
   async function clickFx(){ cursor.classList.add('press'); await sleep(120); cursor.classList.remove('press'); }
 
   async function run(){
-    await sleep(450);                  // brief establish
+    await sleep(250);                  // brief establish (~1.2s intro total)
     cursor.classList.add('show');
 
     // ---- the cursor grabs the bowstring and throws the arrow ----
     const nk = centerOf(api().els.nock);
     moveCursor({ x: nk.x + 34, y: nk.y - 8 });   // reach in
-    await sleep(400);
-    moveCursor({ x: nk.x, y: nk.y });            // onto the string
     await sleep(250);
+    moveCursor({ x: nk.x, y: nk.y });            // onto the string
+    await sleep(150);
 
     cursor.classList.add('press', 'grab');        // grab + pull back…
     api().aimUp();
@@ -223,16 +223,16 @@ yesBtn.<span class="k">onclick</span> = () =&gt; {
       moveCursor({ x: nk.x, y: nk.y + d });       // cursor drags down with the string
       await sleep(44);
     }
-    await sleep(300);                             // hold the draw
+    await sleep(150);                             // hold the draw
 
     cursor.classList.remove('press', 'grab');     // …release → fire!
     api().release();
     moveCursor({ x: nk.x, y: nk.y + 8 });         // tiny recoil
     await sleep(1800);                            // flight + cinematic open (no dead time after)
 
-    // straight to NO — no lull
-    moveCursor({ x: 270, y: 600 });
-    await sleep(180);
+    // let the anniversary question read for a beat, then go for NO
+    moveCursor({ x: 200, y: 470 });
+    await sleep(720);
 
     for (let i = 0; i < 3; i++){        // try to press NO three times
       moveCursor(centerOf(api().els.noBtn));

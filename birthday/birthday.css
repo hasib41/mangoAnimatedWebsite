@@ -1,0 +1,159 @@
+/* ============================================================
+   HAPPY BIRTHDAY — cinematic heart-tree
+   Self-contained page. Vanilla, no deps. The scene is a single
+   <canvas>; the wish + grade are HTML overlays on top.
+   ============================================================ */
+
+:root{
+  --ink:      #7a4a55;   /* dusty rose ink            */
+  --ink-soft: #a9808a;   /* muted eyebrow / sub       */
+  --gold:     #e8a23d;   /* warm gold accent          */
+  --rose:     #e0567f;   /* rose accent               */
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+html, body{ height:100%; }
+
+body{
+  background:#fbeee4;
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+.scene{ position:fixed; inset:0; }
+
+.tree{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  display:block;
+}
+
+/* ---- the hand-lettered wish, upper-left ---- */
+.wish{
+  position:absolute;
+  left:7%;
+  top:6.5%;
+  max-width:62%;
+  pointer-events:none;
+  color:var(--ink);
+}
+/* feathered cream scrim → text stays legible over the richer scene */
+.wish::before{
+  content:"";
+  position:absolute; inset:-14% -18% -24% -12%;
+  background:radial-gradient(78% 92% at 28% 36%, rgba(255,248,240,.74), rgba(255,248,240,.30) 48%, rgba(255,248,240,0) 74%);
+  z-index:-1;
+  opacity:0;
+  transition:opacity 1s ease;
+}
+.wish.is-in::before{ opacity:1; }
+.wish__eyebrow{
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-style:italic;
+  font-weight:500;
+  font-size:clamp(12px, 3vw, 22px);
+  letter-spacing:.04em;
+  color:var(--ink-soft);
+  text-shadow:0 1px 10px #fff7f0, 0 0 5px rgba(255,247,240,.9);
+}
+
+/* ---- the HERO: a hand-lettered "Happy Birthday" that writes itself
+   on early, glows, sheens, and twinkles ---- */
+.wish__heroWrap{ position:relative; display:inline-block; }
+/* warm highlight glow behind the wordmark */
+.wish__heroWrap::before{
+  content:"";
+  position:absolute; left:-10%; right:-10%; top:-24%; bottom:-22%;
+  background:radial-gradient(58% 66% at 42% 50%, rgba(255,212,140,.62), rgba(255,150,120,.2) 52%, transparent 74%);
+  filter:blur(11px); z-index:-1; opacity:0; pointer-events:none;
+}
+/* a little sparkle accent that twinkles by the wordmark */
+.wish__heroWrap::after{
+  content:"\2726";
+  position:absolute; right:-1%; top:-14%;
+  font-size:clamp(15px, 3.6vw, 32px);
+  color:#ffe1a0; text-shadow:0 0 12px rgba(255,205,120,.95);
+  opacity:0; pointer-events:none;
+}
+.wish__hero{
+  font-family:"Great Vibes", cursive;
+  font-weight:400;
+  font-size:clamp(40px, 10vw, 88px);
+  line-height:.94;
+  margin:-.02em 0 .04em;
+  /* gold sheen band sweeps across the gradient fill */
+  background:linear-gradient(96deg, #c4305f 0%, #d8456f 26%, #ffd98a 50%, #d8456f 74%, #e8932f 100%);
+  background-size:220% 100%;
+  background-position:0% 50%;
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 8px rgba(255,248,240,.95)) drop-shadow(0 3px 10px rgba(196,48,95,.32));
+  /* hidden until it "writes" on, left → right */
+  clip-path:inset(0 100% -28% -10%);
+}
+.wish__rule{
+  display:block;
+  width:clamp(46px, 13vw, 110px);
+  height:2px;
+  margin:.12em 0 .48em;
+  background:linear-gradient(90deg, var(--gold), rgba(232,162,61,0));
+  box-shadow:0 0 8px rgba(255,247,240,.9);
+  transform-origin:left center;
+}
+.wish__sub{
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-weight:600;
+  font-size:clamp(11px, 2.7vw, 19px);
+  letter-spacing:.03em;
+  color:var(--ink);
+  text-shadow:0 1px 10px #fff7f0, 0 0 5px rgba(255,247,240,.95);
+}
+
+/* eyebrow / rule / sub ease up + sharpen (hero uses its own write reveal) */
+.wish__eyebrow, .wish__rule, .wish__sub{
+  opacity:0; transform:translateY(12px); filter:blur(5px);
+  transition:opacity .8s ease, transform .9s cubic-bezier(.2,.7,.2,1), filter .8s ease;
+}
+.wish__rule{ transform:translateY(12px) scaleX(.3); }
+.wish.is-in .wish__eyebrow,
+.wish.is-in .wish__sub{ opacity:1; transform:translateY(0); filter:blur(0); }
+.wish.is-in .wish__rule{ opacity:1; transform:translateY(0) scaleX(1); }
+.wish.is-in .wish__rule{ transition-delay:1.35s; }
+.wish.is-in .wish__sub{  transition-delay:1.55s; }
+
+/* hero writes on, then sheens; glow + sparkle come alive */
+.wish.is-in .wish__hero{
+  animation:write 1.05s cubic-bezier(.62,.04,.24,1) .35s forwards,
+            sheen 5s ease-in-out 1.7s infinite;
+}
+.wish.is-in .wish__heroWrap::before{ animation:hlin .8s ease .3s forwards, hlpulse 3.4s ease-in-out 1.7s infinite; }
+.wish.is-in .wish__heroWrap::after{ animation:twk 2.6s ease-in-out 1.6s infinite; }
+
+@keyframes write{ from{ clip-path:inset(0 100% -28% -10%); } to{ clip-path:inset(0 -10% -28% -10%); } }
+@keyframes sheen{ 0%,18%{ background-position:0% 50%; } 60%,100%{ background-position:100% 50%; } }
+@keyframes hlin{ from{ opacity:0; transform:scale(.86); } to{ opacity:.92; transform:scale(1); } }
+@keyframes hlpulse{ 0%,100%{ opacity:.72; } 50%{ opacity:1; } }
+@keyframes twk{ 0%,100%{ opacity:0; transform:scale(.5) rotate(-12deg); } 45%{ opacity:1; transform:scale(1.05) rotate(16deg); } }
+
+/* ---- cinematic grade ---- */
+.grade{ position:absolute; inset:0; pointer-events:none; }
+.grade__vignette{
+  position:absolute; inset:0;
+  background:radial-gradient(125% 95% at 50% 42%, transparent 52%, rgba(86,30,44,.10) 82%, rgba(58,18,30,.26) 100%);
+  mix-blend-mode:multiply;
+}
+.grade__grain{
+  position:absolute; inset:0;
+  background:url('/textures/grain.png') repeat;
+  background-size:300px;
+  opacity:.05;
+  mix-blend-mode:overlay;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .wish__eyebrow, .wish__rule, .wish__sub{ opacity:1; transform:none; filter:none; transition:none; }
+  .wish__hero{ clip-path:none; filter:drop-shadow(0 0 8px rgba(255,248,240,.95)) drop-shadow(0 3px 10px rgba(196,48,95,.32)); }
+  .wish.is-in .wish__hero{ animation:none; }
+  .wish.is-in .wish__heroWrap::before{ animation:none; opacity:.9; }
+  .wish.is-in .wish__heroWrap::after{ animation:none; opacity:0; }
+}

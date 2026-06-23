@@ -1,0 +1,203 @@
+<!doctype html>
+<!--
+  RECORDING RIG (not shipped — not a Vite build input).
+  Tutorial-style frame: title + a device mockup running the real
+  heart-tree animation (iframe) + HTML/CSS code panels + a channel bar.
+  Recorded by /tmp/record-bday.mjs at 540×960 (→ 1080×1920).
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Birthday Animation — recording rig</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{ width:540px; height:960px; overflow:hidden; }
+  body{
+    position:relative;
+    font-family:"Poppins",system-ui,sans-serif;
+    color:#eef0f6;
+    background:
+      radial-gradient(120% 70% at 18% 0%,  #14233a 0%, transparent 55%),
+      radial-gradient(120% 80% at 88% 100%, #2a1330 0%, transparent 52%),
+      #0a0f18;
+  }
+
+  /* ---- title ---- */
+  .title{
+    position:absolute; top:42px; left:0; right:0; text-align:center;
+    font-size:38px; font-weight:800; letter-spacing:-.01em;
+  }
+  .title b{
+    font-weight:800;
+    background:linear-gradient(95deg,#6ee787 0%,#c8f160 55%,#ffd34e 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+
+  /* ---- device / browser mockup ---- */
+  .device{
+    position:absolute; top:120px; left:26px;
+    width:488px; height:360px;
+    background:#fdf6ee; border-radius:18px;
+    box-shadow:0 34px 70px -26px #000, 0 0 0 1px rgba(255,255,255,.06);
+    overflow:hidden;
+  }
+  .device__bar{
+    height:34px; display:flex; align-items:center; gap:8px;
+    padding:0 14px; background:#211a2b;
+  }
+  .device__bar i{ width:12px; height:12px; border-radius:50%; }
+  .device__bar i:nth-child(1){ background:#ff5f57; }
+  .device__bar i:nth-child(2){ background:#febc2e; }
+  .device__bar i:nth-child(3){ background:#28c840; }
+  .device__url{
+    margin-left:12px; font-family:"JetBrains Mono",monospace; font-size:11px;
+    color:#a89fc0; background:#171120; padding:4px 12px; border-radius:7px;
+  }
+  .device iframe{ display:block; width:100%; height:calc(100% - 34px); border:0; background:#fdf6ee; }
+
+  /* ---- code panels ---- */
+  .code{
+    position:absolute; left:18px; right:18px; top:506px; height:336px;
+    display:flex; gap:12px;
+  }
+  .panel{
+    flex:1; min-width:0;
+    background:#15111f; border:1px solid rgba(255,255,255,.06);
+    border-radius:13px; padding:12px 13px; overflow:hidden;
+    box-shadow:0 14px 30px -18px #000;
+  }
+  .panel__dots{ display:flex; gap:6px; margin-bottom:10px; }
+  .panel__dots i{ width:10px; height:10px; border-radius:50%; }
+  .panel__dots i:nth-child(1){ background:#ff5f57; }
+  .panel__dots i:nth-child(2){ background:#febc2e; }
+  .panel__dots i:nth-child(3){ background:#28c840; }
+  .panel pre{
+    font-family:"JetBrains Mono",monospace;
+    font-size:8.4px; line-height:1.66; color:#cdd0e8; white-space:pre;
+  }
+  /* token colours */
+  .c{ color:#6d6a86; font-style:italic; }
+  .t{ color:#ff7eb6; }   /* tag        */
+  .a{ color:#ffb86c; }   /* attribute  */
+  .s{ color:#a5e075; }   /* string     */
+  .k{ color:#c792ea; }   /* keyword    */
+  .f{ color:#82aaff; }   /* fn / select*/
+  .n{ color:#f78c6c; }   /* number     */
+
+  /* ---- channel bar ---- */
+  .bar{
+    position:absolute; left:22px; right:22px; bottom:18px; height:46px;
+    display:flex; align-items:center; gap:12px;
+  }
+  .avatar{
+    width:40px; height:40px; border-radius:50%; flex:0 0 auto;
+    display:grid; place-items:center;
+    font-weight:800; font-size:15px; color:#1a0f18;
+    background:linear-gradient(135deg,#ff8fc0,#ffd34e);
+    box-shadow:0 0 0 2px rgba(255,255,255,.12);
+  }
+  .handle{ font-weight:600; font-size:16px; letter-spacing:.01em; }
+  .actions{ margin-left:auto; display:flex; gap:18px; align-items:center; }
+  .action{ display:flex; flex-direction:column; align-items:center; gap:3px; font-size:9px; color:#cfd2e6; }
+  .action svg{ width:22px; height:22px; }
+</style>
+</head>
+<body>
+  <div class="title"><b>Birthday</b> Animation</div>
+
+  <div class="device">
+    <div class="device__bar">
+      <i></i><i></i><i></i>
+      <span class="device__url">localhost / birthday</span>
+    </div>
+    <iframe id="app" src="/birthday/?record" title="Birthday heart-tree animation"></iframe>
+  </div>
+
+  <div class="code">
+    <div class="panel panel--left">
+      <div class="panel__dots"><i></i><i></i><i></i></div>
+<pre><span class="c">&lt;!-- one canvas, one film --&gt;</span>
+<span class="t">&lt;canvas</span> <span class="a">id</span>=<span class="s">"tree"</span><span class="t">&gt;&lt;/canvas&gt;</span>
+
+<span class="c">// grow a fractal trunk</span>
+<span class="k">function</span> <span class="f">grow</span>(x,y,a,len,d){
+  <span class="f">branch</span>(x,y, x+<span class="f">cos</span>(a)*len,
+              y+<span class="f">sin</span>(a)*len);
+  <span class="k">if</span> (d &gt; <span class="n">5</span>) <span class="k">return</span>;
+  <span class="k">for</span> (<span class="k">let</span> i=<span class="n">0</span>; i&lt;<span class="n">3</span>; i++)
+    <span class="f">grow</span>(x2,y2, a+<span class="f">spread</span>(i),
+         len*<span class="n">0.75</span>, d+<span class="n">1</span>);
+}</pre>
+    </div>
+
+    <div class="panel panel--right">
+      <div class="panel__dots"><i></i><i></i><i></i></div>
+<pre><span class="c">// bloom hearts inside a heart</span>
+<span class="k">const</span> <span class="f">inside</span> = (u,v) =&gt; {
+  <span class="k">const</span> a = u*u + v*v - <span class="n">1</span>;
+  <span class="k">return</span> a*a*a - u*u*v*v*v &lt;= <span class="n">0</span>;
+};
+<span class="k">while</span> (hearts.length &lt; <span class="n">200</span>) {
+  <span class="k">const</span> [u,v] = <span class="f">sample</span>();
+  <span class="k">if</span> (<span class="f">inside</span>(u,v))
+    <span class="f">bloom</span>(u, v, <span class="f">pick</span>(colors));
+}
+
+<span class="c">// "Happy Birthday!" types in</span>
+<span class="f">type</span>(<span class="s">"Hey you 🎉"</span>);</pre>
+    </div>
+  </div>
+
+  <div class="bar">
+    <div class="avatar">CB</div>
+    <div class="handle">code.bloom</div>
+    <div class="actions">
+      <div class="action">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ff6fa5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z" fill="#ff6fa5"/></svg>
+        LIKE
+      </div>
+      <div class="action">
+        <svg viewBox="0 0 24 24" fill="#82aaff" stroke="#82aaff" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg>
+        SAVE
+      </div>
+      <div class="action">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#6ee787" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+        SHARE
+      </div>
+    </div>
+  </div>
+
+<script>
+  const iframe = document.getElementById('app');
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  async function run(){
+    // wait for the animation module to expose its record API
+    for (let i = 0; i < 80; i++){
+      if (iframe.contentWindow && iframe.contentWindow.bdayAPI) break;
+      await sleep(60);
+    }
+    const api = iframe.contentWindow.bdayAPI;
+    if (!api){ window.__done = true; return; }
+
+    await sleep(1500);         // let the recorder's pre-roll pass, hold on the blank card
+    api.start();               // then play from the first sprout
+
+    // wait for the play-through to finish, then a short hold
+    for (let i = 0; i < 400; i++){
+      if (iframe.contentWindow.bdayDone) break;
+      await sleep(50);
+    }
+    await sleep(1700);         // let the finished heart + note breathe
+    window.__done = true;
+  }
+
+  if (iframe.contentWindow && iframe.contentWindow.bdayAPI) run();
+  else iframe.addEventListener('load', () => setTimeout(run, 200));
+</script>
+</body>
+</html>
