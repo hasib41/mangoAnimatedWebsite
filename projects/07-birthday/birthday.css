@@ -32,17 +32,17 @@ body{
 /* ---- the hand-lettered wish, upper-left ---- */
 .wish{
   position:absolute;
-  left:7%;
-  top:6.5%;
-  max-width:62%;
+  left:5.5%;
+  bottom:10%;
+  max-width:46%;
   pointer-events:none;
   color:var(--ink);
 }
 /* feathered cream scrim → text stays legible over the richer scene */
 .wish::before{
   content:"";
-  position:absolute; inset:-14% -18% -24% -12%;
-  background:radial-gradient(78% 92% at 28% 36%, rgba(255,248,240,.74), rgba(255,248,240,.30) 48%, rgba(255,248,240,0) 74%);
+  position:absolute; inset:-16% -20% -22% -14%;
+  background:radial-gradient(82% 96% at 36% 50%, rgba(255,250,243,.86), rgba(255,250,243,.44) 46%, rgba(255,250,243,0) 76%);
   z-index:-1;
   opacity:0;
   transition:opacity 1s ease;
@@ -51,22 +51,22 @@ body{
 .wish__eyebrow{
   font-family:"Cormorant Garamond", Georgia, serif;
   font-style:italic;
-  font-weight:500;
-  font-size:clamp(12px, 3vw, 22px);
-  letter-spacing:.04em;
-  color:var(--ink-soft);
-  text-shadow:0 1px 10px #fff7f0, 0 0 5px rgba(255,247,240,.9);
+  font-weight:600;
+  font-size:clamp(13px, 3.2vw, 24px);
+  letter-spacing:.05em;
+  color:#9c4f63;
+  text-shadow:0 1px 2px #fff8f1, 0 0 8px rgba(255,248,241,.95);
 }
 
 /* ---- the HERO: a hand-lettered "Happy Birthday" that writes itself
    on early, glows, sheens, and twinkles ---- */
 .wish__heroWrap{ position:relative; display:inline-block; }
-/* warm highlight glow behind the wordmark */
+/* warm highlight glow behind the wordmark — makes it sit on its own light */
 .wish__heroWrap::before{
   content:"";
-  position:absolute; left:-10%; right:-10%; top:-24%; bottom:-22%;
-  background:radial-gradient(58% 66% at 42% 50%, rgba(255,212,140,.62), rgba(255,150,120,.2) 52%, transparent 74%);
-  filter:blur(11px); z-index:-1; opacity:0; pointer-events:none;
+  position:absolute; left:-14%; right:-14%; top:-30%; bottom:-26%;
+  background:radial-gradient(62% 72% at 44% 52%, rgba(255,226,150,.85), rgba(255,138,110,.36) 48%, transparent 72%);
+  filter:blur(13px); z-index:-1; opacity:0; pointer-events:none;
 }
 /* a little sparkle accent that twinkles by the wordmark */
 .wish__heroWrap::after{
@@ -79,15 +79,20 @@ body{
 .wish__hero{
   font-family:"Great Vibes", cursive;
   font-weight:400;
-  font-size:clamp(40px, 10vw, 88px);
-  line-height:.94;
+  font-size:clamp(42px, 10.5vw, 92px);
+  line-height:.92;
   margin:-.02em 0 .04em;
-  /* gold sheen band sweeps across the gradient fill */
-  background:linear-gradient(96deg, #c4305f 0%, #d8456f 26%, #ffd98a 50%, #d8456f 74%, #e8932f 100%);
-  background-size:220% 100%;
+  /* saturated rose→gold→rose: a moving gloss, but every stop reads on cream */
+  background:linear-gradient(96deg, #a8164c 0%, #d83f6e 28%, #ff9e3d 50%, #d83f6e 72%, #a8164c 100%);
+  background-size:230% 100%;
   background-position:0% 50%;
   -webkit-background-clip:text; background-clip:text; color:transparent;
-  filter:drop-shadow(0 0 8px rgba(255,248,240,.95)) drop-shadow(0 3px 10px rgba(196,48,95,.32));
+  /* white halo separates it from the blossoms; tight dark edge adds crispness */
+  filter:
+    drop-shadow(0 0 5px rgba(255,252,248,.98))
+    drop-shadow(0 1px 1px rgba(255,252,248,.9))
+    drop-shadow(0 2px 4px rgba(130,18,55,.5))
+    drop-shadow(0 4px 14px rgba(150,28,70,.32));
   /* hidden until it "writes" on, left → right */
   clip-path:inset(0 100% -28% -10%);
 }
@@ -103,10 +108,10 @@ body{
 .wish__sub{
   font-family:"Cormorant Garamond", Georgia, serif;
   font-weight:600;
-  font-size:clamp(11px, 2.7vw, 19px);
+  font-size:clamp(12px, 2.9vw, 20px);
   letter-spacing:.03em;
-  color:var(--ink);
-  text-shadow:0 1px 10px #fff7f0, 0 0 5px rgba(255,247,240,.95);
+  color:#6e3f4a;
+  text-shadow:0 1px 2px #fff8f1, 0 0 8px rgba(255,248,241,.98);
 }
 
 /* eyebrow / rule / sub ease up + sharpen (hero uses its own write reveal) */
@@ -152,7 +157,7 @@ body{
 
 @media (prefers-reduced-motion: reduce){
   .wish__eyebrow, .wish__rule, .wish__sub{ opacity:1; transform:none; filter:none; transition:none; }
-  .wish__hero{ clip-path:none; filter:drop-shadow(0 0 8px rgba(255,248,240,.95)) drop-shadow(0 3px 10px rgba(196,48,95,.32)); }
+  .wish__hero{ clip-path:none; filter:drop-shadow(0 0 5px rgba(255,252,248,.98)) drop-shadow(0 2px 4px rgba(130,18,55,.5)) drop-shadow(0 4px 14px rgba(150,28,70,.32)); }
   .wish.is-in .wish__hero{ animation:none; }
   .wish.is-in .wish__heroWrap::before{ animation:none; opacity:.9; }
   .wish.is-in .wish__heroWrap::after{ animation:none; opacity:0; }

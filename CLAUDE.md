@@ -21,21 +21,21 @@ There is **no test suite and no linter** configured — don't invent commands fo
 
 ## Source layout
 
-This is a **multi-project** Vite app. Each project is a **self-contained top-level folder** with its own `index.html` and **co-located** CSS/JS:
+This is a **multi-project** Vite app. The hub lives at the root; every site is a **self-contained, numbered folder under `projects/`** with its own `index.html` and **co-located** CSS/JS, served at `/projects/<nn-name>/`:
 
 - `index.html` (root) — the **hub landing page** at `/`, linking to every project. Static, self-contained.
-- `mango/` — the MANGOO site (`mango/index.html` + `mango/main.js` + `mango/style.css`), served at `/mango/`. The original build; richest animation logic.
-- `nero/`, `moonart/`, `monolith/` — the other projects, same pattern (`<name>/index.html` + `<name>/<name>.css` + `<name>/<name>.js`), served at `/<name>/`.
-- Each project's HTML references its assets **relatively** (`./moonart.css`, `./moonart.js`) — NOT `/src/...` (there is no shared `src/` anymore).
-- `_template/` — copy-me scaffold for a new project (`index.html` + `app.css` + `app.js`). Folders starting with `_` are ignored by the build.
-- `public/` — served at the web root. Per-project images at `public/photos/<name>/...` referenced as `/photos/<name>/...`. Also `public/textures/grain.png`, `public/favicon*.png`, and finished video outputs in `public/videos/`.
-- `assets/` — raw, non-deployed inputs (e.g. `assets/audio/` source music). Not served by Vite.
+- `projects/01-mango/` — the MANGOO site (`index.html` + `main.js` + `style.css`), served at `/projects/01-mango/`. The original build; richest animation logic.
+- `projects/02-nero/`, `03-moonart/`, `04-monolith/`, `05-crema/`, `06-love/`, `07-birthday/` — the other projects, same pattern (`<nn-name>/index.html` + co-located `.css`/`.js`), served at `/projects/<nn-name>/`. Serial numbers follow hub-card order.
+- Each project's HTML references its assets **relatively** (`./moonart.css`, `./moonart.js`) — NOT `/src/...` (there is no shared `src/`). Cross-cutting assets are still **absolute** from the web root (`/photos/...`, `/textures/...`), unaffected by the folder location.
+- `projects/_template/` — copy-me scaffold for a new project (`index.html` + `app.css` + `app.js`). Folders starting with `_` are ignored by the build.
+- `public/` — served at the web root. Per-project images at `public/photos/<name>/...` referenced as `/photos/<name>/...`. Also `public/textures/grain.png` and `public/favicon*.png`. **No videos here** — videos aren't referenced by any site, so they live in `assets/` (below), out of the deploy.
+- `assets/` — raw, non-deployed inputs (not served by Vite). `assets/audio/` source music. `assets/video/<project>/` holds **all of a project's videos in one place** — the finished short, its silent master, the thumbnail, and any raw source/reference clip (e.g. `assets/video/birthday/` = `birthday_short.mp4` + `birthday_short_silent.mp4` + `birthday_thumb.jpg` + `birthday_reference.mp4`; `assets/video/mango/` = `mango_short.mp4` + `mango_source.MOV`). crema has no video yet, so no folder.
 - `docs/` — build prompts & pipelines: `WEBSITE_PROMPT.md` (master build spec + hard animation rules — read when building a new ad-film site), `GEMINI_PROMPTS.md` (image prompts + rembg/alpha/downscale pipeline), and per-project `*_GEMINI_PROMPTS.md`.
-- `nero-video/` — a separate Remotion project (its own toolchain); not part of the Vite build.
+- `nero-video/`, `monolith-video/` — separate Remotion projects (own toolchains); not part of the Vite build, kept at the repo root.
 
-`vite.config.js` **auto-discovers** projects: any top-level folder with an `index.html` (not starting with `_`/`.`, not in the skip-list) becomes a build entry. So **adding a project = drop in `myproject/index.html`** (copy `_template`), put images in `public/photos/myproject/`, and it ships at `/myproject/` — no config edit. Add a card to the root `index.html` hub to link it.
+`vite.config.js` **auto-discovers** projects: any folder under `projects/` with an `index.html` (not starting with `_`/`.`) becomes a build entry, output to `dist/projects/<name>/`. So **adding a project = drop in `projects/NN-name/index.html`** (copy `projects/_template`), put images in `public/photos/<name>/`, and it ships at `/projects/NN-name/` — no config edit. Add a card to the root `index.html` hub to link it.
 
-## Animation architecture (`mango/main.js`)
+## Animation architecture (`projects/01-mango/main.js`)
 
 The single most important file. Structure to know before touching it:
 
@@ -59,7 +59,7 @@ These come from `WEBSITE_PROMPT.md` and are load-bearing:
 - **Reveal-once triggers** use `start:'top 85%'`, `once:true` — nothing re-jumps on scroll-up.
 - **Photographic assets only** — no SVG/CSS-drawn product art, no emoji, no placeholder images. Backgrounds are never pure white `#FFF`; text color is the cream token.
 
-## Styling (`mango/style.css`)
+## Styling (`projects/01-mango/style.css`)
 
 Design tokens live in `:root` at the top: palette (`--c-yellow/orange/green/cream/ink`), two font families (`--font-display` Anton for giant type, `--font-body` Instrument Sans), a fluid `clamp()` type scale (`--fs-xs` … `--fs-huge`), spacing scale, and `--ease-out`. Use these tokens rather than hardcoding values. CSS sections mirror the HTML sections in order. The `.grain` overlay and loader curtain are CSS + JS-gated (`html.js`, `html.lenis`).
 
@@ -69,7 +69,7 @@ Follow `WEBSITE_PROMPT.md` end to end — it drives topic choice, the per-topic 
 
 ## Video / YouTube Shorts export
 
-The site is also turned into vertical Shorts. Finished video outputs live in `public/videos/` (e.g. `public/videos/mangoVIdeo.MOV` → `public/videos/mangoVideo_short.mp4`); raw source audio (copyrighted, not deployed) lives in `assets/audio/`.
+The site is also turned into vertical Shorts. **All of a project's videos live together in `assets/video/<project>/`** (not in `public/` — they aren't web assets, and this keeps the deploy lean): the finished short, a **silent master** (so audio can be re-muxed/swapped without re-rendering), a thumbnail, and any raw source/reference clip. Copyrighted source music lives in `assets/audio/`. Example: `assets/video/birthday/` = `birthday_short.mp4` + `birthday_short_silent.mp4` + `birthday_thumb.jpg` + `birthday_reference.mp4`.
 
 **Environment constraints (verified on this machine — don't fight them):**
 - The Homebrew `ffmpeg` here is built **without** `libfreetype`/libass, so the `drawtext` and `subtitles` filters **do not exist**. Text cannot be burned in by ffmpeg directly.

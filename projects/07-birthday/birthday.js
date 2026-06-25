@@ -199,10 +199,12 @@ function buildScene(){
   branches = []; hearts = []; petals = []; rested = []; twinkles = [];
   buildHeartPoly();
 
+  // wide (the video frame) shifts the heart up + right so the wish owns a
+  // clean lower-left corner; portrait keeps it centred with the wish below.
   const wide = W / H > 1.2;
-  cx = W * 0.5;
-  cy = H * (wide ? 0.40 : 0.39);
-  ry = Math.min(H * (wide ? 0.34 : 0.33), W * 0.34);
+  cx = W * (wide ? 0.57 : 0.5);
+  cy = H * (wide ? 0.37 : 0.38);
+  ry = Math.min(H * (wide ? 0.33 : 0.33), W * 0.34);
   rx = ry * 1.16;                       // a touch wider → commands the frame
   groundY = H * 0.93;
 

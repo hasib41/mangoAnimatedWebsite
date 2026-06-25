@@ -1,18 +1,20 @@
 import { defineConfig } from 'vite'
 import { readdirSync, existsSync } from 'node:fs'
 
-// Multi-page app. Each project is a self-contained folder with its own
-// index.html + co-located .css/.js (e.g. moonart/index.html + moonart/moonart.js).
-// "/" is the hub landing page (./index.html).
+// Multi-page app. The hub lives at "/" (./index.html). Every site is a
+// self-contained, numbered folder under projects/ (e.g.
+// projects/01-mango/index.html + co-located .css/.js), served at
+// /projects/<nn-name>/.
 //
-// New projects are auto-discovered: any top-level folder containing an index.html
-// becomes a build entry — just drop in `myproject/index.html` and it ships.
-const SKIP = new Set(['node_modules', 'dist', 'public', 'docs', 'assets', 'nero-video', '.git', '.claude'])
-
+// Projects are auto-discovered: drop in projects/NN-name/index.html and it
+// ships. Folders starting with "_" (e.g. projects/_template) are ignored.
 const input = { home: 'index.html' }
-for (const name of readdirSync('.', { withFileTypes: true })) {
-  if (name.isDirectory() && !name.name.startsWith('_') && !name.name.startsWith('.') && !SKIP.has(name.name) && existsSync(`${name.name}/index.html`)) {
-    input[name.name] = `${name.name}/index.html`
+const PROJECTS = 'projects'
+if (existsSync(PROJECTS)) {
+  for (const entry of readdirSync(PROJECTS, { withFileTypes: true })) {
+    if (entry.isDirectory() && !entry.name.startsWith('_') && !entry.name.startsWith('.') && existsSync(`${PROJECTS}/${entry.name}/index.html`)) {
+      input[entry.name] = `${PROJECTS}/${entry.name}/index.html`
+    }
   }
 }
 
