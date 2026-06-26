@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive DeadLine — the timer that's coming for you</title>
+  <meta name="description" content="An interactive coding-meme animation: a red deadline reaper advances on a frantically-typing developer as a real JS countdown ticks down — and the live code highlights as it runs. Ship it before it catches you." />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script>document.documentElement.classList.add('js')</script>
+  <link rel="stylesheet" href="./deadline.css" />
+</head>
+<body>
+  <main class="post" id="post">
+
+    <!-- ░░ wordmark ░░ -->
+    <h1 class="title"><span class="title__a">Interactive</span> <span class="title__b">DeadLine</span></h1>
+
+    <!-- ░░ the animated stage ░░ -->
+    <section class="stage" id="stage" aria-label="A deadline reaper advances along a countdown bar toward a developer typing at a desk.">
+      <div class="stage__inner" id="scene">
+
+        <!-- soft floor glow under the action -->
+        <div class="scene__floor" aria-hidden="true"></div>
+        <!-- danger vignette that builds as the deadline nears -->
+        <div class="scene__danger" id="danger" aria-hidden="true"></div>
+
+        <!-- the countdown rail + filling red bar -->
+        <div class="rail" aria-hidden="true">
+          <div class="rail__line"></div>
+          <div class="rail__fill" id="fill"><span class="rail__edge"></span></div>
+          <div class="rail__ticks" id="ticks"></div>
+        </div>
+
+        <!-- the developer, hunched at the desk, back to the danger.
+             Outer div = position (run + parallax); inner img = idle typing. -->
+        <div class="dev" id="dev" aria-hidden="true">
+          <img class="fig__img" id="devImg" src="/photos/deadline/dev.png" width="900" height="625" alt="" />
+        </div>
+
+        <!-- the deadline reaper, riding the leading edge of the bar.
+             Outer div = position/loom (run); inner img = idle bob. -->
+        <div class="reaper" id="reaper" aria-hidden="true">
+          <img class="fig__img" id="reaperImg" src="/photos/deadline/reaper.svg" width="551" height="900" alt="" />
+        </div>
+
+        <!-- the countdown caption -->
+        <p class="counter" id="counter" aria-live="polite">
+          Deadline <b id="dayNum">7</b> <span id="dayWord">days</span>
+        </p>
+
+        <!-- climax stamp (win / caught) -->
+        <div class="verdict" id="verdict" aria-hidden="true"><span id="verdictText"></span></div>
+      </div>
+    </section>
+
+    <!-- ░░ the code that's actually running ░░ -->
+    <section class="editor" aria-label="The live JavaScript timer powering the countdown.">
+      <header class="editor__bar">
+        <i></i><i></i><i></i>
+        <span class="editor__file">deadline.js — live</span>
+      </header>
+      <pre class="editor__code"><code id="code"></code></pre>
+    </section>
+
+    <!-- ░░ controls + social bar ░░ -->
+    <section class="dock">
+      <div class="dock__controls">
+        <label class="ctl ctl--range">
+          <span class="ctl__label">DEADLINE</span>
+          <input class="ctl__range" id="daysRange" type="range" min="3" max="14" value="7" step="1" aria-label="Days until the deadline" />
+          <output class="ctl__out" id="daysOut">7d</output>
+        </label>
+        <button class="ctl__btn ctl__btn--ship" id="ship" type="button">Ship it 🚀</button>
+        <button class="ctl__btn" id="restart" type="button" aria-label="Restart the deadline">Restart ↻</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- cinematic grade -->
+  <div class="grade" aria-hidden="true"><div class="grade__vignette"></div><div class="grade__grain"></div></div>
+
+  <script type="module" src="./deadline.js"></script>
+</body>
+</html>

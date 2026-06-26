@@ -1,0 +1,50 @@
+<!doctype html>
+<!--
+  RECORDING RIG (not shipped — not a Vite build input).
+  The site IS already the full social post (title + stage + live
+  code + handle bar), so this rig just frames it at 540×960
+  (→ 1080×1920) and drives its self-play after the recorder's
+  pre-roll, via the start() gate the module exposes.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Interactive DeadLine — recording rig</title>
+<style>
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{ width:540px; height:960px; overflow:hidden; background:#000; }
+  iframe{ display:block; width:540px; height:960px; border:0; }
+</style>
+</head>
+<body>
+  <iframe id="app" src="/projects/08-deadline/?record" title="Interactive DeadLine"></iframe>
+<script>
+  const iframe = document.getElementById('app');
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  async function run(){
+    // wait for the animation module to expose its record API
+    for (let i = 0; i < 80; i++){
+      if (iframe.contentWindow && iframe.contentWindow.deadlineAPI) break;
+      await sleep(60);
+    }
+    const api = iframe.contentWindow.deadlineAPI;
+    if (!api){ window.__done = true; return; }
+
+    await sleep(1400);          // hold on frame one through the recorder pre-roll
+    api.start();                // then run the deadline once
+
+    for (let i = 0; i < 400; i++){
+      if (iframe.contentWindow.deadlineDone) break;
+      await sleep(50);
+    }
+    await sleep(1500);          // let the verdict breathe
+    window.__done = true;
+  }
+
+  if (iframe.contentWindow && iframe.contentWindow.deadlineAPI) run();
+  else iframe.addEventListener('load', () => setTimeout(run, 200));
+</script>
+</body>
+</html>

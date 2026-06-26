@@ -1,0 +1,349 @@
+/* ============================================================
+   INTERACTIVE DEADLINE — styles
+   A vertical "coding-meme" post: wordmark, an animated stage
+   (deadline reaper vs. typing developer on a filling countdown
+   bar), the live code that drives it, and a social dock.
+
+   Layout is a single centred column that holds a 9:16-friendly
+   shape, so it reads identically on desktop and as a Short.
+   Per the house rules: only transform/opacity ever animate.
+   ============================================================ */
+
+:root{
+  /* palette */
+  --bg:        #0b0b0f;
+  --ink:       #f4f5fb;
+  --muted:     #9aa0b4;
+  --line:      rgba(255,255,255,.12);
+  --panel:     #14141c;
+
+  --red:       #ff2d2d;
+  --red-deep:  #9c0d18;
+  --red-glow:  #ff3b3b;
+  --cyan:      #45e0ff;
+  --blue:      #2f7bff;
+
+  /* code tokens */
+  --c-com:#5f6477; --c-key:#c792ea; --c-fn:#82aaff; --c-str:#a5e075;
+  --c-num:#f78c6c; --c-var:#ffcb6b; --c-pun:#aeb4c6; --c-prop:#7fdbff;
+
+  --ease: cubic-bezier(.22,1,.36,1);
+  --r:    16px;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+html,body{ height:100%; }
+
+body{
+  min-height:100dvh;
+  display:grid;
+  place-items:center;
+  padding:clamp(14px,3vh,30px);
+  font-family:"Poppins",system-ui,sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(120% 60% at 50% -10%, rgba(47,123,255,.16) 0%, transparent 55%),
+    radial-gradient(90% 50% at 14% 108%, rgba(255,45,45,.22) 0%, transparent 60%),
+    var(--bg);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* ---------- the post column ---------- */
+.post{
+  position:relative;
+  width:min(440px, 96vw);
+  display:flex;
+  flex-direction:column;
+  gap:clamp(12px,2.2vh,20px);
+}
+
+/* ---------- wordmark ---------- */
+.title{
+  text-align:center;
+  font-weight:800;
+  font-size:clamp(26px,7.5vw,38px);
+  letter-spacing:-.02em;
+  line-height:1;
+}
+.title__a{
+  background:linear-gradient(96deg,var(--cyan),var(--blue));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.title__b{ color:var(--ink); }
+
+/* ============================================================
+   STAGE
+   ============================================================ */
+.stage{
+  position:relative;
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  padding:9px;
+  background:linear-gradient(180deg, rgba(255,255,255,.02), transparent);
+}
+.stage__inner{
+  position:relative;
+  aspect-ratio: 16 / 11;
+  border-radius:11px;
+  overflow:hidden;
+  background:
+    radial-gradient(120% 90% at 50% 120%, #15151d 0%, #060608 70%),
+    #050507;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.04), inset 0 -40px 80px -40px #000;
+}
+
+/* soft pool of light on the floor */
+.scene__floor{
+  position:absolute; left:6%; right:6%; bottom:23%;
+  height:34%;
+  background:radial-gradient(60% 100% at 50% 100%, rgba(255,90,70,.16), transparent 72%);
+  filter:blur(2px);
+}
+
+/* danger vignette — JS ramps opacity in the back third of the run */
+.scene__danger{
+  position:absolute; inset:0; opacity:0; pointer-events:none;
+  background:radial-gradient(120% 100% at 50% 58%, transparent 44%, rgba(255,22,22,.45) 100%);
+}
+
+/* ---------- the countdown rail ---------- */
+.rail{
+  position:absolute; left:7%; right:7%; bottom:33%;
+  height:8px;
+}
+.rail__line{
+  position:absolute; inset:0;
+  border-radius:999px;
+  background:rgba(255,255,255,.13);
+  box-shadow:0 1px 0 rgba(255,255,255,.04);
+}
+.rail__fill{
+  position:absolute; inset:0;
+  transform-origin:left center;
+  transform:scaleX(0);
+  border-radius:999px;
+  background:linear-gradient(90deg, var(--red-deep), var(--red) 70%, var(--red-glow));
+  box-shadow:0 0 16px rgba(255,45,45,.5);
+  will-change:transform;
+}
+/* a hot leading edge that travels with the fill */
+.rail__edge{
+  position:absolute; right:-2px; top:50%;
+  width:10px; height:18px;
+  transform:translateY(-50%);
+  border-radius:999px;
+  background:radial-gradient(closest-side, var(--red-glow), rgba(255,80,60,0));
+}
+/* day tick marks, injected by JS */
+.rail__ticks{ position:absolute; inset:0; }
+.rail__ticks i{
+  position:absolute; top:50%; width:2px; height:10px;
+  transform:translate(-50%,-50%);
+  background:rgba(255,255,255,.22);
+  border-radius:2px;
+}
+
+/* ---------- character sprites ----------
+   Outer .dev / .reaper own placement (and the run/parallax transforms);
+   the inner img owns idle motion, so two tweens never share a property. */
+.fig__img{
+  display:block; width:100%; height:auto;
+  -webkit-user-drag:none; user-select:none; pointer-events:none;
+}
+
+/* the developer — anchored at the right end of the rail */
+.dev{
+  position:absolute; right:3%; bottom:21%;
+  width:34%;
+  filter:drop-shadow(0 10px 16px rgba(0,0,0,.45));
+  will-change:transform;
+}
+
+/* the reaper — rides the leading edge of the bar, grows as it nears */
+.reaper{
+  position:absolute; left:-2%; bottom:22%;
+  width:23%;
+  transform-origin:bottom center;
+  filter:drop-shadow(0 12px 20px rgba(120,0,0,.5));
+  will-change:transform;
+}
+
+/* ---------- countdown caption ---------- */
+.counter{
+  position:absolute; left:0; right:0; bottom:13%;
+  text-align:center;
+  font-family:"JetBrains Mono",monospace;
+  font-size:clamp(11px,3vw,14px);
+  letter-spacing:.06em;
+  color:#ff6a5a;
+  text-shadow:0 0 14px rgba(255,60,40,.45);
+}
+.counter b{
+  font-weight:700; color:#ff9a86;
+  display:inline-block; min-width:1.2ch;
+}
+
+/* ---------- verdict stamp ---------- */
+.verdict{
+  position:absolute; inset:0;
+  display:grid; place-items:center;
+  opacity:0; pointer-events:none;
+}
+.verdict span{
+  font-weight:800; letter-spacing:.03em;
+  font-size:clamp(24px,7.6vw,40px);
+  padding:.16em .36em;
+  border:3px solid currentColor;
+  border-radius:12px;
+  transform:rotate(-7deg) scale(.7);
+  text-transform:uppercase;
+  backdrop-filter:blur(1px);
+}
+.verdict.is-caught span{ color:#ff4d4d; text-shadow:0 0 24px rgba(255,40,40,.6); }
+.verdict.is-shipped span{ color:#5be38b; text-shadow:0 0 24px rgba(60,230,120,.55); }
+
+/* ============================================================
+   EDITOR
+   ============================================================ */
+.editor{
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  background:var(--panel);
+  overflow:hidden;
+  box-shadow:0 24px 50px -30px #000;
+}
+.editor__bar{
+  display:flex; align-items:center; gap:7px;
+  padding:9px 13px;
+  background:#0f0f16;
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+.editor__bar i{ width:11px; height:11px; border-radius:50%; }
+.editor__bar i:nth-child(1){ background:#ff5f57; }
+.editor__bar i:nth-child(2){ background:#febc2e; }
+.editor__bar i:nth-child(3){ background:#28c840; }
+.editor__file{
+  margin-left:8px;
+  font-family:"JetBrains Mono",monospace;
+  font-size:11px; color:#6b6f84;
+}
+.editor__code{
+  display:block;
+  padding:12px 4px 13px 0;
+  font-family:"JetBrains Mono",monospace;
+  font-size:clamp(10.5px,2.9vw,12.5px);
+  line-height:1.62;
+  white-space:pre;
+  overflow-x:auto;
+}
+/* one line of code */
+.ln{
+  display:block;
+  position:relative;
+  padding:0 14px 0 42px;
+  transition:background .18s var(--ease);
+}
+.ln::before{
+  content:attr(data-n);
+  position:absolute; left:0; width:30px;
+  text-align:right;
+  color:#3c4054;
+  user-select:none;
+}
+/* the line currently executing */
+.ln.is-live{
+  background:linear-gradient(90deg, rgba(255,45,45,.16), rgba(255,45,45,.02));
+  box-shadow:inset 3px 0 0 var(--red);
+}
+.ln.is-live::before{ color:var(--red-glow); }
+
+/* tokens */
+.tk-com{ color:var(--c-com); font-style:italic; }
+.tk-key{ color:var(--c-key); }
+.tk-fn { color:var(--c-fn); }
+.tk-str{ color:var(--c-str); }
+.tk-num{ color:var(--c-num); }
+.tk-var{ color:var(--c-var); }
+.tk-pun{ color:var(--c-pun); }
+.tk-prop{ color:var(--c-prop); }
+
+/* ============================================================
+   DOCK — controls + social
+   ============================================================ */
+.dock{ display:flex; flex-direction:column; gap:12px; }
+
+.dock__controls{
+  display:flex; align-items:center; gap:10px;
+  flex-wrap:wrap;
+}
+.ctl--range{
+  display:flex; align-items:center; gap:9px;
+  flex:1 1 150px;
+  padding:8px 12px;
+  background:#13131b; border:1px solid var(--line); border-radius:12px;
+}
+.ctl__label{
+  font-family:"JetBrains Mono",monospace; font-size:9.5px;
+  letter-spacing:.14em; color:var(--muted);
+}
+.ctl__range{
+  flex:1; height:4px; -webkit-appearance:none; appearance:none;
+  background:linear-gradient(90deg,var(--red),#5a2433); border-radius:999px; outline:none;
+}
+.ctl__range::-webkit-slider-thumb{
+  -webkit-appearance:none; width:15px; height:15px; border-radius:50%;
+  background:#fff; cursor:pointer; box-shadow:0 0 0 4px rgba(255,45,45,.25);
+}
+.ctl__range::-moz-range-thumb{
+  width:15px; height:15px; border:0; border-radius:50%;
+  background:#fff; cursor:pointer; box-shadow:0 0 0 4px rgba(255,45,45,.25);
+}
+.ctl__out{
+  font-family:"JetBrains Mono",monospace; font-size:12px;
+  color:var(--ink); min-width:3ch; text-align:right;
+}
+.ctl__btn{
+  font-family:"Poppins",sans-serif; font-weight:600; font-size:13px;
+  color:var(--ink); cursor:pointer;
+  padding:10px 15px; border-radius:12px;
+  background:#16161f; border:1px solid var(--line);
+  transition:transform .25s var(--ease), border-color .25s var(--ease), background .25s var(--ease);
+}
+.ctl__btn:hover{ transform:translateY(-1px); border-color:rgba(255,255,255,.28); }
+.ctl__btn:active{ transform:translateY(0) scale(.97); }
+.ctl__btn--ship{
+  background:linear-gradient(96deg,var(--cyan),var(--blue));
+  color:#04121f; border-color:transparent;
+  box-shadow:0 10px 26px -12px rgba(47,123,255,.8);
+}
+.ctl__btn:disabled{ opacity:.4; cursor:not-allowed; transform:none; }
+
+/* ============================================================
+   GRADE — vignette + grain
+   ============================================================ */
+.grade{ position:fixed; inset:0; pointer-events:none; z-index:50; }
+.grade__vignette{
+  position:absolute; inset:0;
+  background:radial-gradient(130% 120% at 50% 42%, transparent 58%, rgba(0,0,0,.55) 100%);
+}
+.grade__grain{
+  position:absolute; inset:-50%;
+  background-image:url("/textures/grain.png");
+  background-size:240px 240px;
+  opacity:.05; mix-blend-mode:overlay;
+}
+
+/* ============================================================
+   REDUCED MOTION — present the scene at rest, no flicker/flash
+   ============================================================ */
+@media (prefers-reduced-motion: reduce){
+  .ln.is-live{ box-shadow:inset 3px 0 0 var(--red); }
+}
+
+/* shorter viewports / Shorts: let the column own the height */
+@media (max-height:760px){
+  .post{ gap:10px; }
+  .stage__inner{ aspect-ratio:16/12; }
+}
