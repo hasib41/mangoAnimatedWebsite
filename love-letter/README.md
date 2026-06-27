@@ -1,88 +1,111 @@
 # Love Letter 💌
 
-A tiny, cute, interactive pixel-art love letter you can open in a web browser.
+A tiny, cute, interactive **pixel-art love letter** that runs in your browser.
 
-Aim **Cupid's bow**, release to fire the arrow at the floating envelope, and the
-letter pops open in a retro "LOVE" window. Answer the question, and the screen
-fills with falling hearts. 🎯❤️
+Aim Cupid's bow, release to fire the arrow at the floating envelope, and a retro
+"LOVE" window pops open. Answer the question — and the screen fills with falling
+hearts. 🎯❤️
 
-It's a single web page — **no accounts, no installs, no internet account
-needed.** Just open it.
+[![Live demo](https://img.shields.io/badge/Live_demo-Open-ff5c8a?style=for-the-badge)](https://hasib41.github.io/love-letter/)
+&nbsp;
+![Built with HTML · CSS · JS](https://img.shields.io/badge/Built_with-HTML_·_CSS_·_JS-555?style=for-the-badge)
+&nbsp;
+![No dependencies](https://img.shields.io/badge/dependencies-none-2ea44f?style=for-the-badge)
+
+### ▶︎ **[Open the live demo →](https://hasib41.github.io/love-letter/)**
+
+<sub>by <a href="https://www.youtube.com/@CodeChill_a"><b>Code &amp; Chill</b></a> 💙</sub>
+
+![Preview of the love letter page](preview.jpg)
 
 ---
 
-## How to run it
+## About
 
-The page uses a JavaScript module, so browsers won't let you open `index.html`
-directly from your file manager (double-clicking the file won't work). You need
-to serve the folder with any small local web server. Pick whichever is easiest
-for you — each is a single command run **from inside this folder**.
+A small, heartfelt web toy built with **plain HTML, CSS, and JavaScript** — no
+frameworks, no build step, no dependencies. The whole thing is ~120&nbsp;KB and
+works offline.
 
-### Option 1 — Python (already on most Macs & Linux)
+## Features
+
+- 🏹 **Interactive bow & arrow** — aim with the mouse/finger, release (or press
+  **Space**) to shoot Cupid's arrow.
+- 💌 **Animated reveal** — the envelope bursts open into a retro pixel "LOVE"
+  window with a little cat.
+- 😉 **A playful "NO" button** that dodges your cursor.
+- 🎉 **Heart confetti & rain** celebration.
+- ♿ **Respects `prefers-reduced-motion`** — shows a calm, static version when
+  your system has reduced motion enabled.
+- 📱 **Responsive** — works on desktop and touch.
+
+## How to play
+
+1. **Aim** — move your mouse (or finger) to aim the bow.
+2. **Shoot** — press & hold, then **release** — or hit the **Space** bar.
+3. The envelope opens into the **LOVE** window.
+4. Press **YES** (the **NO** button is shy 😉).
+5. Enjoy the hearts. Press **✕** to close and shoot again.
+
+## Run it locally
+
+The page loads its JavaScript as a module, so browsers won't run it from a
+`file://` path — you need to serve the folder. Pick any one (run it **inside
+this folder**):
 
 ```bash
+# Python (already on most Macs & Linux)
 python3 -m http.server 8000
-```
+#   → open http://localhost:8000
 
-Then open **http://localhost:8000** in your browser.
-
-### Option 2 — Node.js (if you have it installed)
-
-```bash
+# …or Node.js
 npx serve
+#   → open the printed http://localhost:3000
+
+# …or VS Code: install the "Live Server" extension,
+#   right-click index.html → "Open with Live Server"
 ```
 
-It prints a link like `http://localhost:3000` — open that.
+Stop a running server with **Ctrl + C**.
 
-### Option 3 — VS Code
+## Tech
 
-Install the **"Live Server"** extension, then right-click `index.html` →
-**"Open with Live Server"**.
+Plain **HTML5**, **CSS3** (animations, gradients), and **vanilla JavaScript** —
+zero libraries, zero build tooling. Fonts (`Press Start 2P`, `Pixelify Sans`)
+load from Google Fonts when online and fall back gracefully offline. The cat is
+drawn on a `<canvas>`.
 
-To stop a server (Options 1 & 2), press **Ctrl + C** in the terminal.
-
----
-
-## How to use it
-
-1. **Aim:** move your mouse (or finger on touch) to aim the bow.
-2. **Shoot:** press and hold, then **release** — or press the **Space** bar — to
-   loose Cupid's arrow at the envelope.
-3. The envelope bursts open into the **LOVE** window with a little pixel cat.
-4. Press **YES** (the **NO** button is shy and runs away 😉).
-5. Enjoy the hearts. Press the **✕** to close and shoot again.
-
-> ♿ If your system has **"reduce motion"** turned on, the page skips the
-> animations and shows everything calmly instead.
-
----
-
-## What's in this folder
+## Project structure
 
 ```
 love-letter/
-├── index.html        ← the page (start here)
-├── love.css          ← all the styling & animation
-├── love.js           ← the interactions (plain JavaScript, no libraries)
-├── favicon.png       ← the little browser-tab icon
-├── textures/
-│   └── grain.png     ← subtle film-grain background texture
-└── README.md         ← this file
+├── index.html      # the page
+├── love.css        # styling & animation
+├── love.js         # interactions (vanilla JS)
+├── favicon.png     # browser-tab icon
+├── preview.jpg     # screenshot used in this README
+└── textures/
+    └── grain.png   # subtle film-grain background
 ```
 
-That's the whole project. It's built with plain HTML, CSS, and JavaScript —
-**no frameworks, no build step, no dependencies to download.** The two fonts
-(`Press Start 2P` and `Pixelify Sans`) load from Google Fonts when you're
-online; offline, the page still works with a normal fallback font.
+## Deploy
+
+It's just static files, so it hosts anywhere with no config:
+
+- **GitHub Pages** — Settings → Pages → *Deploy from a branch* → `main` / `root`.
+  Live at `https://<username>.github.io/love-letter/`.
+- Or drag the folder onto **Netlify Drop**, **Vercel**, or **Cloudflare Pages**.
+
+## License
+
+[MIT](LICENSE) — do what you like with the code. ♡
 
 ---
 
-## Putting it on the web (optional)
+<a href="https://www.youtube.com/@CodeChill_a">
+  <img src="logo.png" alt="Code &amp; Chill" width="56" align="left" hspace="10" />
+</a>
 
-Because it's just static files, you can drag this whole folder onto any static
-host and it's live — e.g. **Netlify Drop** (netlify.com/drop), **Vercel**,
-**GitHub Pages**, or **Cloudflare Pages**. No configuration needed.
+**Made with love by [Code &amp; Chill](https://www.youtube.com/@CodeChill_a).**
+If you build something with it, a ⭐ and a subscribe make my day. 💙
 
----
-
-Made with love. ♡
+<br clear="left" />

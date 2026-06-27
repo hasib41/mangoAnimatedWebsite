@@ -1,0 +1,309 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   Cute Lamp — a desk lamp that drifts to sleep and wakes up, drawn in SVG
+   and lit by CSS, framed in a VS Code editor that shows the source.
+   One continuous loop: sleep → wake (light on, eyes open, tongue) → sleep.
+
+   Hard rule: the big moves are transform + opacity only. The off↔on look is a
+   crossfade of two stacked SVG states, never a re-layout. Each animated
+   element owns exactly one transform.
+   ───────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --bg:      #0a0d15;
+  --scene:   #0c1019;
+  --ink:     #eef0f6;
+
+  --cycle:   5.4s;                 /* one full sleep→wake→sleep loop */
+  --ease:    cubic-bezier(.4,0,.2,1);
+
+  /* VS Code dark editor */
+  --ed-bg:     #1e1e1e;
+  --ed-tabbar: #252526;
+  --ed-tab:    #1e1e1e;
+  --ed-act:    #181818;
+  --ed-line:   #2a2a2a;
+  --gutter:    #5a5a5a;
+  --bc:        #8a8a8a;
+
+  /* syntax (VS Code Dark+) */
+  --c-sel: #d7ba7d;   /* selector       */
+  --c-prop:#9cdcfe;   /* property        */
+  --c-val: #ce9178;   /* string / value  */
+  --c-num: #b5cea8;   /* number          */
+  --c-fn:  #dcdcaa;   /* function        */
+  --c-kw:  #569cd6;   /* keyword         */
+  --c-cm:  #6a9955;   /* comment         */
+  --c-pn:  #d4d4d4;   /* punctuation     */
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background:
+    radial-gradient(120% 70% at 50% 10%, #141a2a 0%, transparent 55%),
+    var(--bg);
+  color: var(--ink);
+  font-family: "Inter", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+/* ── 9:16 reel ─────────────────────────────────────────────────────────── */
+.reel {
+  position: relative;
+  width: min(100vw, calc(100dvh * 9 / 16));
+  aspect-ratio: 9 / 16;
+  max-height: 100dvh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 48% at 50% 30%, #161d2e 0%, transparent 62%),
+    linear-gradient(180deg, var(--scene) 0%, #07090f 100%);
+  box-shadow: 0 0 120px -20px #0c1830, inset 0 0 160px -70px #1d2c4a;
+  isolation: isolate;
+}
+
+/* film grain + vignette */
+.grain {
+  position: absolute; inset: 0; z-index: 8; pointer-events: none;
+  background: radial-gradient(140% 100% at 50% 44%, transparent 60%, rgba(0,0,0,.55) 100%);
+  mix-blend-mode: multiply;
+}
+.grain::after {
+  content: ""; position: absolute; inset: -50%;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.4'/></svg>");
+  opacity: .03;
+}
+
+/* ── TITLE ─────────────────────────────────────────────────────────────── */
+.title {
+  position: relative; z-index: 2;
+  margin: 0; padding: clamp(18px, 3.4vh, 30px) 0 clamp(4px, 1vh, 10px);
+  text-align: center;
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(28px, 8vw, 50px);
+  letter-spacing: -0.01em;
+  color: #f4f4f8;
+  text-shadow: 0 4px 30px rgba(180,200,255,.16);
+}
+
+/* ── STAGE : the lamp ──────────────────────────────────────────────────── */
+.stage {
+  position: relative; z-index: 1;
+  flex: 1; min-height: 0;
+  display: grid; place-items: center;
+  overflow: hidden;
+}
+/* faint table line where the light pools */
+.stage::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.06) 30%, rgba(255,255,255,.06) 70%, transparent);
+}
+
+.bob {
+  width: min(72%, 360px);
+  animation: bob 4.6s ease-in-out infinite;
+  will-change: transform;
+}
+.lamp { display: block; width: 100%; height: auto; overflow: visible; }
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+
+/* The light is now driven by a switch: pull the rope → toggle `.is-on`.
+   State is a transition, not a loop. The HEAD nods up to wake (back-eased so it
+   perks eagerly), droops to sleep — pivoting at the neck. */
+.head {
+  transform-box: view-box;
+  transform-origin: 180px 233px;
+  transform: rotate(-7deg);
+  transition: transform .55s cubic-bezier(.34,1.56,.64,1);
+}
+.lamp.is-on .head { transform: rotate(0deg); }
+
+/* the off / on shade + face states crossfade on the switch — snappy, like a
+   real click (the light doesn't ease on slowly, it pops) */
+.shade--on, .face--on  { opacity: 0; transition: opacity .12s var(--ease); }
+.shade--off, .face--off{ opacity: 1; transition: opacity .12s var(--ease); }
+.lamp.is-on .shade--on, .lamp.is-on .face--on   { opacity: 1; }
+.lamp.is-on .shade--off, .lamp.is-on .face--off { opacity: 0; }
+
+/* everything that represents emitted light snaps in with the switch */
+.lamp_light { opacity: 0; transition: opacity .12s var(--ease); will-change: opacity; }
+.lamp.is-on .lamp_light { opacity: 1; }
+
+/* the lamp's own parts (pole, base, rope) aren't light sources — when the
+   switch is OFF they sit in cool shadow, and only brighten once the lamp is
+   lit. Otherwise the white rope reads as if it were glowing in the dark. */
+.stand, .pull { filter: brightness(.42); transition: filter .12s var(--ease); }
+.lamp.is-on .stand, .lamp.is-on .pull { filter: brightness(1); }
+
+/* the sleep marks drift up gently while the lamp dozes */
+.zzz {
+  transform-box: view-box; transform-origin: 224px 148px;
+  animation: zfloat 3.2s ease-in-out infinite; will-change: transform, opacity;
+}
+@keyframes zfloat {
+  0%   { transform: translateY(3px) scale(.92); opacity: .35; }
+  50%  { transform: translateY(-4px) scale(1);  opacity: 1;   }
+  100% { transform: translateY(-9px) scale(1.04); opacity: 0; }
+}
+
+/* the glow gently breathes while lit (scale only — opacity stays the switch's) */
+.lamp.is-on .glow {
+  transform-box: view-box; transform-origin: 180px 238px;
+  animation: glowbreath 3.4s ease-in-out infinite; will-change: transform;
+}
+@keyframes glowbreath { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+/* ── the pull-chain SWITCH ─────────────────────────────────────────────── */
+/* You GRAB the rope and pull it down; it clicks at the detent and snaps back. */
+.pull { cursor: grab; outline: none; touch-action: none; }
+.pull.dragging { cursor: grabbing; }
+.rope-hit { pointer-events: all; }                 /* fat invisible grab area */
+.rope { transition: stroke .2s; }
+.rope-knob { transform-box: fill-box; transform-origin: center; transition: filter .2s; }
+
+/* hover / keyboard focus highlight the knob so it reads as interactive */
+.pull:hover .rope-knob,
+.pull:focus-visible .rope-knob { filter: drop-shadow(0 0 5px rgba(150,180,255,.9)); }
+.pull:focus-visible .rope { stroke: #bcd0ff; }
+
+/* idle: a real pendulum, not a rigid rod. The upper cord swings from the shade
+   lip; the lower cord + bead (.rope-swing) swing a touch more and LAG behind
+   (negative delay), so the cord curves/whips through the middle of each swing.
+   Both freeze while you're actually dragging it. */
+.rope-sway {
+  transform-box: view-box; transform-origin: 210px 236px;
+  animation: sway1 4.2s ease-in-out infinite; will-change: transform;
+}
+.rope-swing {
+  transform-box: view-box; transform-origin: 212px 267px;
+  animation: sway2 4.2s ease-in-out -0.45s infinite; will-change: transform;
+}
+.pull.dragging .rope-sway,
+.pull.dragging .rope-swing { animation: none; }
+.rope-sheen, .ferrule, .bead, .bead-hi { pointer-events: none; }
+@keyframes sway1 { 0%,100% { transform: rotate(-2.4deg); } 50% { transform: rotate(2.4deg); } }
+@keyframes sway2 { 0%,100% { transform: rotate(-3.4deg); } 50% { transform: rotate(3.6deg); } }
+
+/* release → snap back up past rest and settle (springy cord recoil).
+   JS sets transform: translateY(0) on this class so it animates from the
+   dragged offset. */
+.pull.snap { transition: transform .5s cubic-bezier(.34,1.7,.5,1); }
+
+/* tap / keyboard: a quick scripted yank for non-drag input */
+.pull.pulling { animation: pull .46s cubic-bezier(.33,0,.2,1); will-change: transform; }
+@keyframes pull {
+  0%   { transform: translateY(0); }
+  22%  { transform: translateY(15px); }   /* the yank — clicks here */
+  54%  { transform: translateY(-5px); }   /* overshoot up */
+  78%  { transform: translateY(2px); }
+  100% { transform: translateY(0); }
+}
+
+/* the knob gives a little pop at the moment the switch clicks */
+.rope-knob.pop { animation: knobpop .22s ease; }
+@keyframes knobpop { 0% { transform: scale(1); } 42% { transform: scale(1.35); } 100% { transform: scale(1); } }
+
+/* ── TWO SOURCE PANES : CSS · JS ───────────────────────────────────────── */
+.code3 {
+  position: relative; z-index: 3;
+  flex: 0 0 37%;
+  display: grid; grid-template-columns: 1fr 1fr;
+  min-height: 0;
+  container-type: inline-size;   /* size the code to the panel, not the viewport */
+  background: linear-gradient(180deg, #1b1830 0%, #131120 100%);
+  border-radius: 18px 18px 0 0;
+  border-top: 1px solid rgba(255,255,255,.07);
+  box-shadow: 0 -22px 60px -30px #000, inset 0 1px 0 rgba(255,255,255,.05);
+  overflow: hidden;
+}
+
+.pane {
+  min-width: 0; min-height: 0;
+  display: flex; flex-direction: column;
+  padding: clamp(10px, 2.2vh, 15px) clamp(7px, 1.7cqw, 12px);
+  overflow: hidden;
+}
+.pane + .pane { border-left: 1px solid rgba(255,255,255,.07); }
+
+.pane__title {
+  margin: 0 0 clamp(6px, 1.3vh, 10px);
+  font: 700 clamp(11px, 4.6cqw, 16px)/1 "Inter", sans-serif;
+  letter-spacing: .01em;
+}
+.pane--html .pane__title { color: #ff5d6c; text-shadow: 0 0 16px rgba(255,93,108,.35); }
+.pane--css  .pane__title { color: #45c4f0; text-shadow: 0 0 16px rgba(69,196,240,.32);  }
+.pane--js   .pane__title { color: #ffd23f; text-shadow: 0 0 16px rgba(255,210,63,.30);  }
+
+.code {
+  margin: 0; flex: 1; min-height: 0; overflow: hidden;
+  font: 500 clamp(7.5px, 2cqw, 12px)/1.5 "JetBrains Mono", monospace;
+  white-space: pre;
+}
+.code code { display: block; }
+
+.ln {
+  display: block;
+  opacity: 0; transform: translateY(5px);   /* typewriter-style reveal */
+}
+body.lit .ln {
+  animation: reveal .4s var(--ease) forwards;
+  animation-delay: calc(var(--i) * 55ms + 300ms);
+}
+@keyframes reveal { to { opacity: 1; transform: none; } }
+
+/* syntax colours */
+.sel { color: var(--c-sel); }
+.pr  { color: var(--c-prop); }
+.vl  { color: var(--c-val); }
+.nm  { color: var(--c-num); }
+.fn  { color: var(--c-fn); }
+.kw  { color: var(--c-kw); }
+.cm  { color: var(--c-cm); font-style: italic; }
+.pn  { color: var(--c-pn); }
+.tg  { color: #569cd6; }            /* html tag       */
+.at  { color: #9cdcfe; }            /* html attribute */
+.st  { color: #ce9178; }            /* string         */
+
+.sw {
+  display: inline-block; width: 9px; height: 9px; border-radius: 2px;
+  margin-right: 4px; vertical-align: middle; transform: translateY(-1px);
+  background: var(--c); box-shadow: 0 0 0 1px #0006 inset;
+}
+
+.caret {
+  display: inline-block; width: 6px; height: 1.05em; margin-left: 1px;
+  vertical-align: text-bottom;
+  background: #d4d4d4;
+  animation: blink 1.05s steps(1) infinite;
+}
+@keyframes blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
+
+/* ── recorder cursor : a visible pointer used only while recording (added by
+   window.start()), so the Short shows the cord being pulled. ────────────── */
+.rec-cursor {
+  position: fixed; left: 0; top: 0; z-index: 9999;
+  width: 30px; height: 30px; pointer-events: none;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,.55));
+  will-change: transform;
+}
+.rec-cursor svg { display: block; }
+
+/* ── reduced motion : no idle/spring motion; the switch still toggles, but
+   instantly. JS starts the lamp lit so the source is shown. ────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .bob, .rope-sway, .rope-swing, .zzz, .lamp.is-on .glow, .pull.pulling { animation: none; opacity: 1; }
+  .head, .shade--on, .shade--off, .face--on, .face--off, .lamp_light { transition: none; }
+  .caret { animation: none; }
+  body.lit .ln, .ln { animation: none; opacity: 1; transform: none; }
+}

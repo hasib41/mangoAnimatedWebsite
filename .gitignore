@@ -20,3 +20,7 @@ Thumbs.db
 # local docs, not for the repo
 GEMINI_PROMPTS.md
 WEBSITE_PROMPT.md
+
+# standalone share build of projects/06-love — its own git repo, not part of this one
+love-letter/
+love-letter.zip

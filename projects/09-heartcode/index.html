@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Love, in 3D — rendered live</title>
+  <meta name="description" content="A 3D heart built from a thousand 'i love you's, rendered live beside the code that draws it." />
+  <meta property="og:title" content="Love, in 3D — rendered live" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script>document.documentElement.classList.add('js')</script>
+  <link rel="stylesheet" href="./heart.css" />
+</head>
+<body>
+  <!-- 9:16 reel frame, centered on an ambient backdrop so it records cleanly as a Short -->
+  <div class="reel">
+    <div class="grain" aria-hidden="true"></div>
+    <div class="particles" aria-hidden="true"></div>
+
+    <!-- ── title ──────────────────────────────────────────────────── -->
+    <h1 class="title"><span class="title__grad">Love</span>, in&nbsp;3D</h1>
+
+    <!-- ── browser window framing the live preview ─────────────────── -->
+    <section class="window" aria-label="3D heart made of the words i love you">
+      <header class="window__bar">
+        <span class="dot dot--r"></span><span class="dot dot--y"></span><span class="dot dot--g"></span>
+        <span class="window__url"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="4" y="9" width="16" height="12" rx="2"/><path d="M8 9V6a4 4 0 0 1 8 0v3"/></svg>localhost / heartcode</span>
+      </header>
+      <div class="stage">
+        <div class="stage__glow" aria-hidden="true"></div>
+        <div class="scene">
+          <div class="tilt">
+            <div class="beat">
+              <div class="spin" id="world"><!-- JS injects extruded text layers --></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── two code panels (structure · motion) ────────────────────── -->
+    <div class="panels">
+      <section class="panel">
+        <header class="panel__bar">
+          <span class="d"></span><span class="d"></span><span class="d"></span>
+          <span class="panel__name">heart.css</span>
+        </header>
+        <pre class="code"><code>
+<span class="ln" style="--i:0"><span class="cm">// a thousand "i love you"s</span></span>
+<span class="ln" style="--i:1"><span class="sel">.heart</span> <span class="sel">.word</span> <span class="pn">{</span></span>
+<span class="ln" style="--i:2">  <span class="pr">color</span><span class="pn">:</span> <span class="sw sw--r"></span><span class="vl">#ff2d2d</span><span class="pn">;</span></span>
+<span class="ln" style="--i:3">  <span class="pr">font-size</span><span class="pn">:</span> <span class="nm">1.3rem</span><span class="pn">;</span></span>
+<span class="ln" style="--i:4">  <span class="pr">letter-spacing</span><span class="pn">:</span> <span class="nm">2px</span><span class="pn">;</span></span>
+<span class="ln" style="--i:5">  <span class="pr">text-shadow</span><span class="pn">:</span> <span class="nm">0 0 14px</span> <span class="sw sw--c"></span><span class="vl">#ff5a5f</span><span class="pn">;</span></span>
+<span class="ln" style="--i:6"><span class="pn">}</span></span>
+<span class="ln" style="--i:7"><span class="sel">.heart__world</span> <span class="pn">{</span></span>
+<span class="ln" style="--i:8">  <span class="pr">transform-style</span><span class="pn">:</span> <span class="vl">preserve-3d</span><span class="pn">;</span></span>
+<span class="ln" style="--i:9"><span class="pn">}</span></span>
+</code></pre>
+      </section>
+
+      <section class="panel">
+        <header class="panel__bar">
+          <span class="d"></span><span class="d"></span><span class="d"></span>
+          <span class="panel__name">spin.css</span>
+        </header>
+        <pre class="code"><code>
+<span class="ln" style="--i:1"><span class="cm">/* one heartbeat, forever */</span></span>
+<span class="ln" style="--i:2"><span class="kw">@keyframes</span> <span class="fn">spin</span> <span class="pn">{</span></span>
+<span class="ln" style="--i:3">  <span class="vl">from</span> <span class="pn">{</span> <span class="fn">rotateY</span><span class="pn">(</span><span class="nm">-30deg</span><span class="pn">);</span> <span class="pn">}</span></span>
+<span class="ln" style="--i:4">  <span class="vl">to</span>   <span class="pn">{</span> <span class="fn">rotateY</span><span class="pn">(</span><span class="nm">30deg</span><span class="pn">);</span> <span class="pn">}</span></span>
+<span class="ln" style="--i:5"><span class="pn">}</span></span>
+<span class="ln" style="--i:6"><span class="kw">@keyframes</span> <span class="fn">beat</span> <span class="pn">{</span></span>
+<span class="ln" style="--i:7">  <span class="nm">14%</span> <span class="pn">{</span> <span class="fn">scale</span><span class="pn">(</span><span class="nm">1.06</span><span class="pn">);</span> <span class="pn">}</span></span>
+<span class="ln" style="--i:8">  <span class="nm">42%</span> <span class="pn">{</span> <span class="fn">scale</span><span class="pn">(</span><span class="nm">1.03</span><span class="pn">);</span> <span class="pn">}</span></span>
+<span class="ln cur" style="--i:9"><span class="pn">}</span><span class="caret"></span></span>
+</code></pre>
+      </section>
+    </div>
+  </div>
+
+  <script type="module" src="./heart.js"></script>
+</body>
+</html>

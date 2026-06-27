@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Cute Lamp — a lamp that wakes up, in CSS</title>
+  <meta name="description" content="A cute desk lamp that drifts off to sleep and wakes up — drawn in SVG, lit by CSS, beside the code that builds it." />
+  <meta property="og:title" content="Cute Lamp — a lamp that wakes up, in CSS" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;1,500;1,600;1,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script>document.documentElement.classList.add('js')</script>
+  <link rel="stylesheet" href="./lamp.css" />
+</head>
+<body>
+  <!-- 9:16 reel frame, centered on an ambient backdrop so it records cleanly as a Short -->
+  <div class="reel">
+    <div class="grain" aria-hidden="true"></div>
+
+    <!-- ── title ──────────────────────────────────────────────────── -->
+    <h1 class="title">Cute&nbsp;Lamp</h1>
+
+    <!-- ── stage : the lamp character ──────────────────────────────── -->
+    <section class="stage" aria-label="A cute desk lamp that wakes up and turns its light on">
+      <div class="bob">
+        <svg class="lamp" viewBox="0 0 360 384" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="shadeOn" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#c4b9e2"/>
+              <stop offset="1" stop-color="#9587bd"/>
+            </linearGradient>
+            <linearGradient id="shadeOff" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#43434f"/>
+              <stop offset="1" stop-color="#2f2f39"/>
+            </linearGradient>
+            <linearGradient id="pole" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0"   stop-color="#cdcdd6"/>
+              <stop offset=".42" stop-color="#f4f4f9"/>
+              <stop offset="1"   stop-color="#c2c2cd"/>
+            </linearGradient>
+            <radialGradient id="base" cx="50%" cy="38%" r="70%">
+              <stop offset="0" stop-color="#eeeef3"/>
+              <stop offset="1" stop-color="#bcbcc8"/>
+            </radialGradient>
+            <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+              <stop offset="0"   stop-color="#fff3cf" stop-opacity="1"/>
+              <stop offset=".55" stop-color="#ffe09a" stop-opacity=".7"/>
+              <stop offset="1"   stop-color="#ffce7a" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="cone" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#ffe6a8" stop-opacity=".55"/>
+              <stop offset="1" stop-color="#ffe6a8" stop-opacity="0"/>
+            </linearGradient>
+            <radialGradient id="pool" cx="50%" cy="50%" r="50%">
+              <stop offset="0" stop-color="#ffe7a6" stop-opacity=".5"/>
+              <stop offset="1" stop-color="#ffe7a6" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="knob" cx="36%" cy="30%" r="76%">
+              <stop offset="0"   stop-color="#ffffff"/>
+              <stop offset=".5"  stop-color="#dcdde5"/>
+              <stop offset="1"   stop-color="#aeb0bd"/>
+            </radialGradient>
+            <linearGradient id="ropeGrad" x1="0" y1="236" x2="0" y2="298" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#e6e7ee"/>
+              <stop offset="1" stop-color="#c0c2cd"/>
+            </linearGradient>
+            <linearGradient id="ferrule" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0"   stop-color="#b7bac6"/>
+              <stop offset=".5"  stop-color="#eef0f6"/>
+              <stop offset="1"   stop-color="#abaeba"/>
+            </linearGradient>
+          </defs>
+
+          <!-- light spilling down + warm pool on the table (only when on) -->
+          <path  class="lamp_light cone" d="M120,236 L240,236 L302,372 L58,372 Z" fill="url(#cone)"/>
+          <ellipse class="lamp_light pool" cx="180" cy="360" rx="124" ry="26" fill="url(#pool)"/>
+
+          <!-- stand : pole + base -->
+          <g class="stand">
+            <rect x="172.5" y="232" width="15" height="86" rx="7.5" fill="url(#pole)"/>
+            <ellipse cx="180" cy="322" rx="47" ry="11.5" fill="url(#base)"/>
+            <ellipse cx="180" cy="318" rx="30" ry="6" fill="#f1f1f6"/>
+            <!-- warm highlight that catches the light -->
+            <rect class="lamp_light" x="173" y="234" width="6" height="82" rx="3" fill="#fff0c4" opacity=".0"/>
+          </g>
+
+          <!-- warm glow under the shade rim (only when on) -->
+          <ellipse class="lamp_light glow" cx="180" cy="238" rx="78" ry="22" fill="url(#glow)"/>
+
+          <!-- HEAD : shade + face (nods up to wake) -->
+          <g class="head">
+            <!-- shade body, two stacked states crossfade off↔on -->
+            <path class="shade shade--off" d="M147,116 L213,116 Q221,116 223,124 L246,229 Q248,236 241,237 Q180,251 119,237 Q112,236 114,229 L137,124 Q139,116 147,116 Z" fill="url(#shadeOff)"/>
+            <path class="shade shade--on"  d="M147,116 L213,116 Q221,116 223,124 L246,229 Q248,236 241,237 Q180,251 119,237 Q112,236 114,229 L137,124 Q139,116 147,116 Z" fill="url(#shadeOn)"/>
+            <!-- bright warm rim along the bottom lip, on only -->
+            <path class="lamp_light rim" d="M119,236 Q180,250 241,236" fill="none" stroke="#fff1c6" stroke-width="3.5" stroke-linecap="round" opacity="0"/>
+
+            <!-- face : sleeping -->
+            <g class="face face--off">
+              <!-- drifting sleep marks -->
+              <g class="zzz">
+                <path d="M214,150 h9 l-9,11 h9" fill="none" stroke="#bdb9cb" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M231,135 h6.5 l-6.5,8 h6.5" fill="none" stroke="#bdb9cb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity=".75"/>
+              </g>
+              <!-- peaceful closed eyes (light enough to read on the dark shade) -->
+              <path class="lamp_eyes" d="M150,195 Q160,203 170,195" fill="none" stroke="#cfccda" stroke-width="4.5" stroke-linecap="round"/>
+              <path class="lamp_eyes" d="M190,195 Q200,203 210,195" fill="none" stroke="#cfccda" stroke-width="4.5" stroke-linecap="round"/>
+              <!-- small content mouth -->
+              <path d="M173,210 Q180,215 187,210" fill="none" stroke="#cfccda" stroke-width="3.4" stroke-linecap="round"/>
+              <!-- soft sleepy blush -->
+              <ellipse cx="150" cy="205" rx="6" ry="3.6" fill="#9a90b4" opacity=".4"/>
+              <ellipse cx="210" cy="205" rx="6" ry="3.6" fill="#9a90b4" opacity=".4"/>
+            </g>
+            <!-- face : awake + happy -->
+            <g class="face face--on">
+              <path class="lamp_eyes" d="M150,200 Q160,190 170,200" fill="none" stroke="#2f2d38" stroke-width="5" stroke-linecap="round"/>
+              <path class="lamp_eyes" d="M190,200 Q200,190 210,200" fill="none" stroke="#2f2d38" stroke-width="5" stroke-linecap="round"/>
+              <path class="lamp_mouth" d="M169,207 Q180,210 191,207 Q189,223 180,224 Q171,223 169,207 Z" fill="#2c2a34"/>
+              <ellipse class="lamp_tongue" cx="180" cy="220" rx="5.2" ry="4.4" fill="#ff7a59"/>
+              <!-- blush -->
+              <ellipse cx="148" cy="210" rx="6.5" ry="4" fill="#ff8f7a" opacity=".5"/>
+              <ellipse cx="212" cy="210" rx="6.5" ry="4" fill="#ff8f7a" opacity=".5"/>
+            </g>
+
+            <!-- pull-chain : the hanging cord IS the on/off switch.
+                 Two nested groups give it a real pendulum whip — the lower
+                 cord + bead (.rope-swing) trail the upper part (.rope-sway). -->
+            <g class="pull" role="button" tabindex="0"
+               aria-label="Pull the cord to switch the lamp on or off" aria-pressed="false">
+              <g class="rope-sway">
+                <!-- upper cord : hangs from the shade lip -->
+                <path class="rope"       d="M210,236 C210.6,246 211.4,256 212,267" fill="none" stroke="url(#ropeGrad)" stroke-width="3.3" stroke-linecap="round"/>
+                <path class="rope-sheen" d="M210,236 C210.6,246 211.4,256 212,267" fill="none" stroke="#ffffff" stroke-opacity=".32" stroke-width="1.1" stroke-linecap="round"/>
+                <g class="rope-swing">
+                  <!-- lower cord -->
+                  <path class="rope"       d="M212,267 C212.4,274 212.8,281 213,288" fill="none" stroke="url(#ropeGrad)" stroke-width="3.1" stroke-linecap="round"/>
+                  <path class="rope-sheen" d="M212,267 C212.4,274 212.8,281 213,288" fill="none" stroke="#ffffff" stroke-opacity=".3" stroke-width="1" stroke-linecap="round"/>
+                  <!-- the pull bead : ferrule cap + shaded wooden bead + specular -->
+                  <g class="rope-knob">
+                    <rect class="ferrule" x="210.5" y="286.5" width="5" height="6" rx="2.2" fill="url(#ferrule)"/>
+                    <ellipse class="bead" cx="213" cy="298" rx="6.3" ry="7.4" fill="url(#knob)" stroke="#000" stroke-opacity=".12" stroke-width=".5"/>
+                    <ellipse class="bead-hi" cx="210.9" cy="295" rx="1.9" ry="2.5" fill="#fff" opacity=".6"/>
+                  </g>
+                </g>
+              </g>
+              <!-- fat invisible hit target so the thin cord is easy to grab -->
+              <path class="rope-hit" d="M210,236 C211,256 213,276 213,304"
+                    fill="none" stroke="#000" stroke-opacity="0" stroke-width="26" stroke-linecap="round"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ── two source panes : CSS · JS that build & switch the lamp ──── -->
+    <section class="code3" aria-label="The CSS and JS that build the lamp">
+      <article class="pane pane--css">
+        <h2 class="pane__title">CSS</h2>
+        <pre class="code"><code><span class="ln" style="--i:0"><span class="sel">.light</span> <span class="pn">{</span></span>
+<span class="ln" style="--i:1">  <span class="pr">opacity</span><span class="pn">:</span> <span class="nm">0</span><span class="pn">;</span></span>
+<span class="ln" style="--i:2">  <span class="pr">transition</span><span class="pn">:</span> <span class="pr">opacity</span> <span class="nm">.12s</span><span class="pn">;</span></span>
+<span class="ln" style="--i:3">  <span class="pr">filter</span><span class="pn">:</span> <span class="fn">drop-shadow</span><span class="pn">(</span></span>
+<span class="ln" style="--i:4">    <span class="nm">0 0 40px</span> <span class="sw" style="--c:#ffe6a3"></span><span class="vl">#ffe6a3</span><span class="pn">);</span></span>
+<span class="ln" style="--i:5"><span class="pn">}</span></span>
+<span class="ln" style="--i:6"><span class="sel">.lamp.on</span> <span class="sel">.light</span> <span class="pn">{</span></span>
+<span class="ln" style="--i:7">  <span class="pr">opacity</span><span class="pn">:</span> <span class="nm">1</span> <span class="pn">}</span></span>
+</code></pre>
+      </article>
+
+      <article class="pane pane--js">
+        <h2 class="pane__title">JS</h2>
+        <pre class="code"><code><span class="ln" style="--i:0"><span class="cm">// pull the cord to toggle</span></span>
+<span class="ln" style="--i:1"><span class="kw">const</span> <span class="vl">lamp</span> <span class="pn">=</span> <span class="fn">$</span><span class="pn">(</span><span class="st">'.lamp'</span><span class="pn">)</span></span>
+<span class="ln" style="--i:2"><span class="kw">const</span> <span class="vl">cord</span> <span class="pn">=</span> <span class="fn">$</span><span class="pn">(</span><span class="st">'.cord'</span><span class="pn">)</span></span>
+<span class="ln" style="--i:3"><span class="vl">cord</span><span class="pn">.</span><span class="pr">onpointerdown</span> <span class="pn">=</span> <span class="fn">drag</span></span>
+<span class="ln" style="--i:4"><span class="kw">function</span> <span class="fn">drag</span><span class="pn">(</span><span class="vl">e</span><span class="pn">) {</span></span>
+<span class="ln" style="--i:5">  <span class="kw">if</span> <span class="pn">(</span><span class="fn">pull</span><span class="pn">(</span><span class="vl">e</span><span class="pn">)</span> <span class="pn">&gt;</span> <span class="nm">DETENT</span><span class="pn">)</span></span>
+<span class="ln" style="--i:6">    <span class="vl">lamp</span><span class="pn">.</span><span class="vl">classList</span><span class="pn">.</span><span class="fn">toggle</span><span class="pn">(</span><span class="st">'on'</span><span class="pn">)</span></span>
+<span class="ln cur" style="--i:7"><span class="pn">}</span><span class="caret"></span></span>
+</code></pre>
+      </article>
+    </section>
+  </div>
+
+  <script type="module" src="./lamp.js"></script>
+</body>
+</html>
