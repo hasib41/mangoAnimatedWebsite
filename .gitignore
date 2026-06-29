@@ -21,6 +21,7 @@ Thumbs.db
 GEMINI_PROMPTS.md
 WEBSITE_PROMPT.md
 
-# standalone share build of projects/06-love — its own git repo, not part of this one
+# standalone share builds — each is its own git repo / GitHub remote, not part of this one
 love-letter/
-love-letter.zip
+# never commit share-build archives (regenerate with `zip -r <name>.zip <folder>`)
+*.zip

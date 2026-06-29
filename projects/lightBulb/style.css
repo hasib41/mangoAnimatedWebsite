@@ -1,0 +1,136 @@
+* {
+  box-sizing: border-box;
+}
+:root {
+  --depth: 5vmin;
+  --on: 0;
+  --heat: 0; /* filament overdrive, 0 = normal .. 1 = white-hot, about to blow */
+  --dim: 0; /* room brown-out, 0 = full .. 1 = dark. lowers lightness only (no hue sweep) */
+  --size: 25vmin;
+  --bg: hsl(calc(200 - (var(--on) * 160)), calc((20 + (var(--on) * 50)) * 1%), calc((20 + (var(--on) * 60) - (var(--dim) * 48)) * 1%));
+  --cord: hsl(0, 0%, calc((60 - (var(--on) * 50)) * 1%));
+  --stroke: hsl(0, 0%, calc((58 - (var(--on) * 48) + (var(--heat) * 30)) * 1%));
+  --shine: hsla(0, 0%, 100%, calc(0.75 - (var(--on) * 0.5)));
+  --cap: hsl(0, 0%, calc((40 + (var(--on) * 30)) * 1%));
+  /* blackbody ramp: cold-dark -> amber (lit) -> white-hot (overdrive). lead wires are cooler than the coil. */
+  --filament: hsl(calc(38 - (var(--heat) * 4)), calc((85 - (var(--heat) * 65)) * 1%), calc((14 + (var(--on) * 38) + (var(--heat) * 34)) * 1%));
+  --coil: hsl(calc(40 - (var(--heat) * 6)), calc((92 - (var(--heat) * 72)) * 1%), calc((16 + (var(--on) * 44) + (var(--heat) * 40)) * 1%));
+}
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  overflow: hidden;
+}
+label {
+  position: absolute;
+  opacity: 0.5;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+input {
+  height: 0;
+  width: 0;
+  position: fixed;
+  left: 100%;
+  transform: scale(0);
+}
+.toggle {
+  height: var(--size);
+  width: var(--size);
+  transform: translate(-50%, -100%);
+  z-index: 2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -100%, calc(var(--depth) * 3));
+}
+.toggle-scene {
+  overflow: visible !important;
+  width: 100%;
+  position: absolute;
+}
+.toggle-scene__cord {
+  stroke: var(--cord);
+  cursor: move;
+}
+.toggle-scene__cord:nth-of-type(1) {
+  display: none;
+}
+.toggle-scene__cord:nth-of-type(2),
+.toggle-scene__cord:nth-of-type(3),
+.toggle-scene__cord:nth-of-type(4),
+.toggle-scene__cord:nth-of-type(5) {
+  display: none;
+}
+.toggle-scene__cord-end {
+  stroke: var(--cord);
+  fill: var(--cord);
+}
+.toggle-scene__dummy-cord {
+  stroke-width: 6;
+  stroke: var(--cord);
+}
+
+/* ---------- filament assembly ---------- */
+.bulb__filament {
+  stroke: var(--filament);
+}
+.bulb__coil {
+  stroke: var(--coil);
+  /* the coil blooms as it heats — small surface, glow is cheap here */
+  filter: drop-shadow(0 0 calc(var(--heat) * 7px) rgba(255, 210, 130, var(--heat)));
+}
+.bulb__coil-break {
+  display: none;
+  stroke: #dfe9ff;
+}
+.bulb__hotspot {
+  opacity: 0;
+  filter: drop-shadow(0 0 6px #bcd4ff) drop-shadow(0 0 13px #7fb0ff);
+}
+.bulb__arc {
+  opacity: 0;
+}
+.bulb__soot {
+  opacity: 0;
+  filter: blur(3px);
+}
+
+.bulb__shine {
+  stroke: var(--shine);
+}
+.bulb__flash {
+  stroke: #cfe0ff;
+  display: none;
+}
+.bulb__bulb {
+  stroke: var(--stroke);
+  /* translucent "glass glow" — kept translucent so the filament stays visible through it */
+  fill: hsla(calc(46 - (var(--heat) * 6)), 85%, calc((78 + (var(--heat) * 22)) * 1%), calc(0.06 + (var(--on) * 0.26) + (var(--heat) * 0.34) - (var(--dim) * 0.12)));
+}
+.bulb__cap {
+  fill: var(--cap);
+}
+.bulb__cap-shine {
+  fill: var(--shine);
+}
+.bulb__cap-outline {
+  stroke: var(--stroke);
+}
+
+/* ---------- arc-flash overlay ---------- */
+.arc-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 9;
+  pointer-events: none;
+  opacity: 0;
+  /* electrical arcs read blue-white, not warm */
+  background: radial-gradient(circle at 50% 36%, rgba(226, 238, 255, 0.95), rgba(180, 205, 255, 0.3) 42%, transparent 68%);
+}

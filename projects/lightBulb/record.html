@@ -1,0 +1,250 @@
+<!doctype html>
+<!--
+  RECORDING RIG (not shipped — not a Vite build input).
+  Coding-showcase frame: small video title, the live bulb (iframe) in a
+  browser window, then HTML/CSS/JS code panels. A scripted cursor pulls the
+  cord; the bulb over-drives and blows out.
+  Recorded headless at 540×960 (DSF 2 → 1080×1920) by record.mjs.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Impossible Lightbulb — recording rig</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{ width:540px; height:960px; overflow:hidden; }
+  body{
+    position:relative;
+    font-family:"Space Grotesk",system-ui,sans-serif;
+    color:#eef1fb;
+    background:
+      radial-gradient(120% 70% at 18% 0%, #1b2440 0%, transparent 55%),
+      radial-gradient(120% 80% at 88% 100%, #241836 0%, transparent 52%),
+      #0b0e18;
+  }
+
+  /* ---- small video title ---- */
+  .vtitle{
+    position:absolute; top:0; left:0; width:540px; height:56px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+  }
+  .vtitle h1{ font-size:19px; font-weight:700; letter-spacing:.01em; }
+  .vtitle h1 b{ font-weight:700; background:linear-gradient(92deg,#7fb0ff,#ffd479); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .vtitle p{ font-size:11px; font-weight:500; color:#8b93b5; letter-spacing:.02em; }
+
+  /* ---- live page in a browser window ---- */
+  .device{
+    position:absolute; top:60px; left:14px;
+    width:512px; height:540px;
+    border-radius:14px; overflow:hidden;
+    background:#26333a;
+    box-shadow:0 26px 60px -28px #000, 0 0 0 1px rgba(255,255,255,.05);
+  }
+  .device__bar{
+    height:34px; display:flex; align-items:center; gap:7px;
+    padding:0 13px; background:#141a24; border-bottom:1px solid rgba(255,255,255,.05);
+  }
+  .device__bar i{ width:10.5px; height:10.5px; border-radius:50%; }
+  .device__bar i:nth-child(1){ background:#ff5f57; }
+  .device__bar i:nth-child(2){ background:#febc2e; }
+  .device__bar i:nth-child(3){ background:#28c840; }
+  .device__title{ margin-left:8px; font-size:12px; font-weight:500; color:#eef1fb; }
+  .device__title b{ font-weight:700; background:linear-gradient(92deg,#ffd479,#ff9e6c); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .device__url{
+    margin-left:auto; font-family:"JetBrains Mono",monospace; font-size:9.5px;
+    color:#8b93b5; background:#0b0e18; padding:3px 9px; border-radius:7px;
+  }
+  .device iframe{ display:block; width:100%; height:calc(100% - 34px); border:0; background:#26333a; }
+
+  /* ---- code panels ---- */
+  .code{
+    position:absolute; left:14px; right:14px; top:614px; height:338px;
+    display:flex; gap:9px;
+  }
+  .panel{
+    flex:1; min-width:0;
+    background:#11151f; border:1px solid rgba(255,255,255,.06);
+    border-radius:11px; padding:10px 10px 8px; overflow:hidden;
+    box-shadow:0 12px 30px -18px #000;
+  }
+  .panel__bar{ display:flex; align-items:center; gap:5px; margin-bottom:8px; }
+  .panel__bar i{ width:7px; height:7px; border-radius:50%; background:#3a3550; }
+  .panel__bar i:nth-child(1){ background:#ff5f57; }
+  .panel__bar i:nth-child(2){ background:#febc2e; }
+  .panel__bar i:nth-child(3){ background:#28c840; }
+  .panel h4{
+    font-family:"JetBrains Mono",monospace; font-size:11.5px; font-weight:500;
+    margin-left:auto; letter-spacing:.05em;
+  }
+  .panel--html h4{ color:#ff7eb6; }
+  .panel--css  h4{ color:#7fb0ff; }
+  .panel--js   h4{ color:#ffd479; }
+  .panel pre{
+    font-family:"JetBrains Mono",monospace;
+    font-size:6.7px; line-height:1.66; color:#cdd0e8; white-space:pre;
+  }
+  /* token colors */
+  .c{ color:#6d6a86; font-style:italic; }
+  .t{ color:#ff7eb6; }
+  .a{ color:#ffb86c; }
+  .s{ color:#a5e075; }
+  .k{ color:#c792ea; }
+  .f{ color:#82aaff; }
+  .n{ color:#f78c6c; }
+
+  /* ---- scripted cursor ---- */
+  .cursor{
+    position:fixed; left:-40px; top:-40px; width:23px; height:23px;
+    z-index:60; pointer-events:none; opacity:0;
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,.55));
+    transition:left .34s cubic-bezier(.4,0,.2,1), top .34s cubic-bezier(.4,0,.2,1), opacity .22s ease;
+  }
+  .cursor.show{ opacity:1; }
+  .cursor.grab{ transition:opacity .22s ease; }   /* lockstep drag — no position easing */
+  .cursor svg{ display:block; transition:transform .1s ease; }
+  .cursor.press svg{ transform:scale(.78); }
+  .cursor.press::after{
+    content:""; position:absolute; width:18px; height:18px; border-radius:50%;
+    border:2px solid rgba(255,184,108,.9); left:3px; top:3px;
+    transform:translate(-50%,-50%); animation:ring .42s ease-out;
+  }
+  @keyframes ring{ from{ transform:scale(.2); opacity:.9; } to{ transform:scale(1.8); opacity:0; } }
+</style>
+</head>
+<body>
+  <div class="vtitle">
+    <h1>The Impossible <b>Lightbulb</b></h1>
+    <p>pull the cord — it always blows</p>
+  </div>
+
+  <div class="device">
+    <div class="device__bar">
+      <i></i><i></i><i></i>
+      <span class="device__title">lightbulb — <b>HTML · CSS · JS</b></span>
+      <span class="device__url">localhost / lightBulb</span>
+    </div>
+    <iframe id="app" src="/projects/lightBulb/?record" title="Impossible lightbulb"></iframe>
+  </div>
+
+  <div class="code">
+    <div class="panel panel--html">
+      <div class="panel__bar"><i></i><i></i><i></i><h4>Html</h4></div>
+<pre><span class="c">&lt;!-- the filament --&gt;</span>
+<span class="t">&lt;g</span> <span class="a">class</span>=<span class="s">"bulb__coil"</span><span class="t">&gt;</span>
+ <span class="t">&lt;path</span> <span class="a">d</span>=<span class="s">"M-761 790
+   L-753 794 L-745 786…"</span><span class="t">/&gt;</span>
+<span class="t">&lt;/g&gt;</span>
+
+<span class="c">&lt;!-- broken halves --&gt;</span>
+<span class="t">&lt;path</span> <span class="a">class</span>=<span class="s">"coil--l"</span><span class="t">/&gt;</span>
+<span class="t">&lt;path</span> <span class="a">class</span>=<span class="s">"coil--r"</span><span class="t">/&gt;</span>
+<span class="t">&lt;circle</span> <span class="a">class</span>=<span class="s">"hotspot"</span><span class="t">/&gt;</span>
+
+<span class="c">&lt;!-- the pull cord --&gt;</span>
+<span class="t">&lt;line</span> <span class="a">class</span>=<span class="s">"cord"</span><span class="t">/&gt;</span></pre>
+    </div>
+
+    <div class="panel panel--css">
+      <div class="panel__bar"><i></i><i></i><i></i><h4>CSS</h4></div>
+<pre><span class="f">:root</span> {
+  <span class="k">--heat</span>: <span class="n">0</span>; <span class="c">/* white-hot */</span>
+}
+<span class="c">/* blackbody: amber→white */</span>
+<span class="f">.bulb__coil</span> {
+  <span class="k">stroke</span>: <span class="f">hsl</span>(
+    <span class="f">calc</span>(<span class="n">40</span> - heat*<span class="n">6</span>),
+    <span class="f">calc</span>((<span class="n">92</span> - heat*<span class="n">72</span>)%),
+    <span class="f">calc</span>((<span class="n">16</span> + heat*<span class="n">40</span>)%));
+  <span class="k">filter</span>: <span class="f">drop-shadow</span>(<span class="n">0 0</span>
+    <span class="f">calc</span>(heat*<span class="n">7px</span>) <span class="n">#ffd27a</span>);
+}
+<span class="f">.bulb__bulb</span> {
+  <span class="k">fill</span>: <span class="f">hsla</span>(<span class="n">46</span>,<span class="n">85%</span>,<span class="n">88%</span>,
+    <span class="f">calc</span>(.06 + heat*.34));
+}</pre>
+    </div>
+
+    <div class="panel panel--js">
+      <div class="panel__bar"><i></i><i></i><i></i><h4>JS</h4></div>
+<pre><span class="c">// it always blows out</span>
+<span class="k">function</span> <span class="f">surge</span>() {
+  tl.<span class="f">to</span>(root, {
+    <span class="s">'--heat'</span>: <span class="n">1</span> })      <span class="c">// over-drive</span>
+    .<span class="f">add</span>(<span class="f">brownOut</span>())   <span class="c">// flicker</span>
+    .<span class="f">call</span>(arcFlash)    <span class="c">// it severs</span>
+    .<span class="f">call</span>(() =&gt; {
+      coil.<span class="f">hide</span>();
+      embers.<span class="f">show</span>();    <span class="c">// red→black</span>
+      soot.<span class="f">bloom</span>();
+    });
+}
+cord.<span class="f">on</span>(<span class="s">'pull'</span>, surge);</pre>
+    </div>
+  </div>
+
+  <!-- scripted cursor -->
+  <div class="cursor" id="cursor">
+    <svg width="23" height="23" viewBox="0 0 24 24">
+      <path d="M4 2 L4 21 L9.2 16 L12.4 22.5 L15.2 21.2 L12 14.8 L19 14.8 Z"
+            fill="#ffffff" stroke="#161b28" stroke-width="1.3" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+<script>
+  const iframe = document.getElementById('app');
+  const cursor = document.getElementById('cursor');
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const api = () => iframe.contentWindow.lightbulbAPI;
+
+  function centerOf(el){
+    const r = el.getBoundingClientRect();          // iframe-local coords
+    const f = iframe.getBoundingClientRect();        // iframe offset in page
+    return { x: f.left + r.left + r.width / 2, y: f.top + r.top + r.height / 2 };
+  }
+  function moveCursor(pt){ cursor.style.left = (pt.x - 3) + 'px'; cursor.style.top = (pt.y - 2) + 'px'; }
+
+  async function run(){
+    await sleep(350);                       // establish (title + glowing-off bulb)
+    cursor.classList.add('show');
+
+    const hit = api().els.hit;
+    const start = centerOf(hit);
+    const SCALE = hit.getBoundingClientRect().width / (api().unit * 2); // screen px / svg unit
+
+    moveCursor({ x: start.x, y: start.y - 48 });   // glide in toward the cord
+    await sleep(230);
+    moveCursor(start);
+    await sleep(150);
+
+    cursor.classList.add('press', 'grab');          // grab + pull down
+    const PULL = 150, STEPS = 6;
+    for (let i = 1; i <= STEPS; i++){
+      const px = PULL * i / STEPS;
+      api().tug(px);
+      moveCursor({ x: start.x, y: start.y + px * SCALE });
+      await sleep(42);
+    }
+    await sleep(120);                               // hold the draw
+
+    cursor.classList.remove('press', 'grab');       // …release → it blows
+    api().release();
+    moveCursor({ x: start.x, y: start.y - 12 });    // small recoil
+    await sleep(280);
+    cursor.classList.remove('show');
+
+    await sleep(3700);                              // over-drive → arc-flash → cool to black
+    window.__done = true;
+  }
+
+  function boot(){
+    if (iframe.contentWindow && iframe.contentWindow.lightbulbAPI) setTimeout(run, 350);
+    else setTimeout(boot, 120);
+  }
+  iframe.addEventListener('load', () => setTimeout(boot, 200));
+</script>
+</body>
+</html>

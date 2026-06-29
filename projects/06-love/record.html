@@ -26,40 +26,28 @@
       #100a1c;
   }
 
-  /* ---- header pill ---- */
-  .pill{
-    position:absolute; top:16px; left:50%; transform:translateX(-50%);
-    display:flex; align-items:center; gap:8px;
-    background:rgba(22,16,34,.82);
-    border:1px solid rgba(255,255,255,.08);
-    padding:8px 16px; border-radius:14px;
-    font-size:13px; font-weight:500; letter-spacing:.01em;
-    box-shadow:0 8px 24px -12px #000;
-  }
-  .pill b{ font-weight:700; background:linear-gradient(92deg,#ff5d8f,#ff9ec7); -webkit-background-clip:text; background-clip:text; color:transparent; }
-  .pill .dot{ width:7px; height:7px; border-radius:50%; background:#ff5d8f; box-shadow:0 0 10px #ff5d8f; }
-
-  /* ---- device / browser mockup (portrait — matches the page) ---- */
+  /* ---- live page : fills the whole top, no blank background ---- */
   .device{
-    position:absolute; top:44px; left:70px;
-    width:400px; height:630px;
-    background:#0c0a18; border-radius:18px;
-    box-shadow:0 30px 60px -24px #000, 0 0 0 1px rgba(255,255,255,.05);
+    position:absolute; top:0; left:0;
+    width:540px; height:686px;
+    background:#f7efe3;
     overflow:hidden;
   }
   .device__bar{
-    height:30px; display:flex; align-items:center; gap:7px;
-    padding:0 12px; background:#171327; border-bottom:1px solid rgba(255,255,255,.06);
+    height:36px; display:flex; align-items:center; gap:7px;
+    padding:0 14px; background:#171327; border-bottom:1px solid rgba(255,255,255,.06);
   }
   .device__bar i{ width:11px; height:11px; border-radius:50%; }
   .device__bar i:nth-child(1){ background:#ff5f57; }
   .device__bar i:nth-child(2){ background:#febc2e; }
   .device__bar i:nth-child(3){ background:#28c840; }
+  .device__title{ margin-left:8px; font-size:12.5px; font-weight:500; letter-spacing:.01em; color:#ece8fb; }
+  .device__title b{ font-weight:700; background:linear-gradient(92deg,#ff5d8f,#ff9ec7); -webkit-background-clip:text; background-clip:text; color:transparent; }
   .device__url{
-    margin-left:10px; font-family:"JetBrains Mono",monospace; font-size:10px;
+    margin-left:auto; font-family:"JetBrains Mono",monospace; font-size:10px;
     color:#9a93b8; background:#0e0b1a; padding:3px 10px; border-radius:7px;
   }
-  .device iframe{ display:block; width:100%; height:calc(100% - 30px); border:0; background:#f7efe3; }
+  .device iframe{ display:block; width:100%; height:calc(100% - 36px); border:0; background:#f7efe3; }
 
   /* ---- code panels ---- */
   .code{
@@ -114,11 +102,10 @@
 </style>
 </head>
 <body>
-  <div class="pill"><span class="dot"></span>Valentine Letter — <b>HTML · CSS · JS</b></div>
-
   <div class="device">
     <div class="device__bar">
       <i></i><i></i><i></i>
+      <span class="device__title">Valentine Letter — <b>HTML · CSS · JS</b></span>
       <span class="device__url">localhost / love</span>
     </div>
     <iframe id="app" src="/projects/06-love/?record" title="Love letter animation"></iframe>
